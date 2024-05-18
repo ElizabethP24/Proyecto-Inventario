@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Inicio</title>
+	<link rel="stylesheet" href="/static/css/normalize.css">
+	<link rel="stylesheet" href="/static/css/sweetalert2.css">
+	<link rel="stylesheet" href="/static/css/material.min.css">
+	<link rel="stylesheet" href="/static/css/material-design-iconic-font.min.css">
+	<link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.css">
+	<link rel="stylesheet" href="/static/css/main.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')</script>
+	<script src="/static/js/material.min.js" ></script>
+	<script src="/static/js/sweetalert2.min.js" ></script>
+	<script src="/static/js/jquery.mCustomScrollbar.concat.min.js" ></script>
+	<script src="/static/js/main.js" ></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+</head>
+
+<body>
+	<!-- Notifications area -->
+	<section class="full-width container-notifications">
+		<div class="full-width container-notifications-bg btn-Notification"></div>
+	    <section class="NotificationArea">
+	        <div class="full-width text-center NotificationArea-title tittles">Notificaciones <i class="zmdi zmdi-close btn-Notification"></i></div>
+	        <a href="#" class="Notification" id="notifation-unread-1">
+	            <div class="Notification-icon"><i class="zmdi zmdi-accounts-alt bg-info"></i></div>
+	            <div class="Notification-text">
+	                <p>
+	                    <i class="zmdi zmdi-circle"></i>
+	                    <strong>Nuevo Usuario Registrado</strong> 
+	                    <br>
+	                    <small>En este momento</small>
+	                </p>
+	            </div>
+	        	<div class="mdl-tooltip mdl-tooltip--left" for="notifation-unread-1">Notificaciones Pendientes</div> 
+	        </a>
+	        <a href="#" class="Notification" id="notifation-read-1">
+	            <div class="Notification-icon"><i class="zmdi zmdi-cloud-download bg-primary"></i></div>
+	            <div class="Notification-text">
+	                <p>
+	                    <i class="zmdi zmdi-circle-o"></i>
+	                    <strong>Nuevas configuraciones</strong> 
+	                    <br>
+	                    <small>30 Min Después</small>
+	                </p>
+	            </div>
+	            <div class="mdl-tooltip mdl-tooltip--left" for="notifation-read-1">Notificaciones</div>
+	        </a>
+	        <a href="#" class="Notification" id="notifation-unread-2">
+	            <div class="Notification-icon"><i class="zmdi zmdi-upload bg-success"></i></div>
+	            <div class="Notification-text">
+	                <p>
+	                    <i class="zmdi zmdi-circle"></i>
+	                    <strong>Archivo cargado</strong> 
+	                    <br>
+	                    <small>Hace 31 minutos</small>
+	                </p>
+	            </div>
+	            <div class="mdl-tooltip mdl-tooltip--left" for="notifation-unread-2">Notificaciones sin leer</div>
+	        </a> 
+	        <a href="#" class="Notification" id="notifation-read-2">
+	            <div class="Notification-icon"><i class="zmdi zmdi-mail-send bg-danger"></i></div>
+	            <div class="Notification-text">
+	                <p>
+	                    <i class="zmdi zmdi-circle-o"></i>
+	                    <strong>Nuevo Mensaje</strong> 
+	                    <br>
+	                    <small>Hace 37 minutos</small>
+	                </p>
+	            </div>
+	            <div class="mdl-tooltip mdl-tooltip--left" for="notifation-read-2">Notificaciones leidas</div>
+	        </a>
+	        <a href="#" class="Notification" id="notifation-read-3">
+	            <div class="Notification-icon"><i class="zmdi zmdi-folder bg-primary"></i></div>
+	            <div class="Notification-text">
+	                <p>
+	                    <i class="zmdi zmdi-circle-o"></i>
+	                    <strong>Carpeta eliminada</strong> 
+	                    <br>
+	                    <small>Hace 1 hora</small>
+	                </p>
+	            </div>
+	            <div class="mdl-tooltip mdl-tooltip--left" for="notifation-read-3">Notificacion leida</div>
+	        </a>  
+	    </section>
+	</section>
+	<!-- navLateral -->
+	<section class="full-width navLateral">
+		<div class="full-width navLateral-bg btn-menu"></div>
+		<div class="full-width navLateral-body">
+			<div class="full-width navLateral-body-logo text-center tittles">
+				<i class="zmdi zmdi-close btn-menu"></i> INVENTARIO "HUELLA DE AMOR"
+			</div>
+			<figure class="full-width navLateral-body-tittle-menu">
+				<div>
+					<img src="/static/assets/img/avatar1.png" alt="Avatar" class="img-responsive">
+				</div>
+				<figcaption>
+					<span>
+						Usuario Admin<br>
+						<small>Admin</small>
+					</span>
+				</figcaption>
+			</figure>
+			<nav class="full-width">
+				<ul class="full-width list-unstyle menu-principal">
+					<li class="full-width">
+						<a href="{{ url_for('home') }}" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-view-dashboard"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								INICIO
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-case"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								ADMINISTRACION
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<li class="full-width">
+								<a href="{{ url_for('providers') }}" class="full-width btn-subMenu">
+									<div class="navLateral-body-cl">
+										<i class="zmdi zmdi-truck"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										PROVEEDORES
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="{{ url_for('categories') }}" class="full-width btn-subMenu">
+									<div class="navLateral-body-cl">
+										<i class="zmdi zmdi-label"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										CATEGORIAS
+									</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-face"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								USUARIOS
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<li class="full-width">
+								<a href="{{ url_for('admin') }}" class="full-width btn-subMenu">
+									<div class="navLateral-body-cl">
+										<i class="zmdi zmdi-account"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										ADMINISTRADORES
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="{{ url_for('client') }}" class="full-width btn-subMenu">
+									<div class="navLateral-body-cl">
+										<i class="zmdi zmdi-accounts"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										CLIENTES
+									</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="{{ url_for('products') }}" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-washing-machine"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								PRODUCTOS
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="{{ url_for('sales') }}" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-shopping-cart"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								VENTAS
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="{{ url_for('inventory') }}" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-store"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								INVENTORIO
+							</div>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</section>
+	<!-- pageContent -->
+	<section class="full-width pageContent">
+		<!-- navBar -->
+		<div class="full-width navBar">
+			<div class="full-width navBar-options">
+				<i class="zmdi zmdi-swap btn-menu" id="btn-menu"></i>	
+				<div class="mdl-tooltip" for="btn-menu">Ocultar / Mostrar MENU</div>
+				<nav class="navBar-options-list">
+					<ul class="list-unstyle">
+						<li class="btn-Notification" id="notifications">
+							<i class="zmdi zmdi-notifications"></i>
+							<div class="mdl-tooltip" for="notifications">Notificaciones</div>
+						</li>
+						<li class="btn-exit" id="btn-exit">
+							<i class="zmdi zmdi-power"></i>
+							<div class="mdl-tooltip" for="btn-exit">Cerrar Sesión</div>
+						</li>
+						<li class="text-condensedLight noLink" ><small>Usuario</small></li>
+						<li class="noLink">
+							<figure>
+								<img src="/static/assets/img/avatar1.png" alt="Avatar" class="img-responsive">
+							</figure>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<section class="full-width header-well">
+			<div class="full-width header-well-icon">
+				<i class="zmdi zmdi-truck"></i>
+			</div>
+			<div class="full-width header-well-text">
+				<p class="text-condensedLight">
+					Ingrese los datos solicitados para agregar un Proveedor
+				</p>
+			</div>
+		</section>
+		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+			<div class="mdl-tabs__tab-bar">
+				<a href="#tabNewProvider" class="mdl-tabs__tab is-active">REGISTRO PROVEEDOR</a>
+				<a href="#tabListProvider" class="mdl-tabs__tab">LISTA PROVEEDORES</a>
+			</div>
+			<div class="mdl-tabs__panel is-active" id="tabNewProvider">
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--12-col">
+						<div class="full-width panel mdl-shadow--2dp">
+							<div class="full-width panel-tittle bg-primary text-center tittles">
+								Nuevo Proveedor
+							</div>
+							<div class="full-width panel-content">
+								<form action="/guardar_proveedor" method="POST">
+									<div class="mdl-grid">
+										<div class="mdl-cell mdl-cell--12-col">
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATOS PROVEEDORES</legend><br>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIProvider" name="DNIProvider">
+												<label class="mdl-textfield__label" for="DNIProvider">Documento</label>
+												<span class="mdl-textfield__error">Documento Invalido</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9 ]*(\.[0-9]+)?" id="NameProvider" name="NameProvider">
+												<label class="mdl-textfield__label" for="NameProvider">Nombre</label>
+												<span class="mdl-textfield__error">Nombre Inválido</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--12-col">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" id="addressProvider" name="addressProvider">
+												<label class="mdl-textfield__label" for="addressProvider">Direción</label>
+												<span class="mdl-textfield__error">Dirección Inválida</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneProvider" name="phoneProvider">
+												<label class="mdl-textfield__label" for="phoneProvider">Teléfono</label>
+												<span class="mdl-textfield__error">Teléfono Inválido</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="email" id="emailProvider" name="emailProvider">
+												<label class="mdl-textfield__label" for="emailProvider">Correo Electrónico</label>
+												<span class="mdl-textfield__error">Corrreo Electrónico Inválido</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" id="webProvider" name="webProvider">
+												<label class="mdl-textfield__label" for="webProvider">Categoría Productos</label>
+												<span class="mdl-textfield__error">CVategoría Inválida</span>
+											</div>
+									    </div>
+									</div>
+									<p class="text-center">
+										<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored bg-primary" id="btn-addProvider">
+											<i class="zmdi zmdi-plus"></i>
+										</button>
+										<div class="mdl-tooltip" for="btn-addProvider">GUARDAR PROVEEDOR</div>
+									</p>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mdl-tabs__panel" id="tabListProvider">
+				<div class="mdl-grid">
+					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
+						<div class="full-width panel mdl-shadow--2dp">
+							<div class="full-width panel-tittle bg-success text-center tittles">
+								Lista Proveedores
+							</div>
+							<div class="full-width panel-content">
+								<form action="#">
+									<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+										<label class="mdl-button mdl-js-button mdl-button--icon" for="searchProvider">
+											<i class="zmdi zmdi-search"></i>
+										</label>
+										<div class="mdl-textfield__expandable-holder">
+											<input class="mdl-textfield__input" type="text" id="searchProvider">
+											<label class="mdl-textfield__label"></label>
+										</div>
+									</div>
+								</form>
+								<div class="mdl-list">
+									{% if proveedores %}
+										{% for proveedor in proveedores %}
+										<div class="mdl-list__item mdl-list__item--two-line">
+											<span class="mdl-list__item-primary-content">
+												<i class="zmdi zmdi-truck mdl-list__item-avatar"></i>
+												<span>{{ loop.index }}. {{ proveedor[1] }}</span>
+												<span class="mdl-list__item-sub-title">CC. {{ proveedor[0] }}</span>
+												<span class="mdl-list__item-sub-title">Tel. {{ proveedor[3] }}</span>
+												<span class="mdl-list__item-sub-title">Cat. {{ proveedor[5] }}</span>
+												<span class="mdl-list__item-sub-title">Correo. {{ proveedor[4] }}</span>
+											</span>
+											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+												<i class="zmdi zmdi-more"></i>
+											</a>
+											<!-- Contenedor para las opciones de editar y eliminar -->
+											<div class="options-container" style="display: none;">
+												<a href="#!">Editar</a>
+												<a href="#!">Eliminar</a>
+											</div>
+										</div>
+										{% endfor %}
+									{% else %}
+									<p>No hay proveedores disponibles.</p>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+	<script>
+			function toggleOptions(element) {
+				// Obtener el contenedor de opciones
+				var optionsContainer = element.parentElement.querySelector('.options-container');
+				// Alternar la visibilidad del contenedor de opciones
+				if (optionsContainer.style.display === 'none') {
+					optionsContainer.style.display = 'block';
+				} else {
+					optionsContainer.style.display = 'none';
+				}
+			}
+	</script>
+			<!-- Modal genérico para mensajes -->
+			<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p id="modalMessageContent"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<script>
+				// Mostrar el modal con el mensaje correspondiente
+				$(document).ready(function() {
+					{% with messages = get_flashed_messages(with_categories=true) %}
+					{% if messages %}
+					{% for category, message in messages %}
+					$('#messageModal').modal('show');
+					$('#messageModalLabel').text("{{ category | capitalize }}");
+					$('#modalMessageContent').text("{{ message }}");
+					{% endfor %}
+					{% endif %}
+					{% endwith %}
+				});
+			</script>
+	<script src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="/static/js/main.js"></script>
+</body>
+</html>

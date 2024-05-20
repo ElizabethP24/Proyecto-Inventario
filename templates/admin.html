@@ -17,6 +17,8 @@
 	<script src="/static/js/sweetalert2.min.js" ></script>
 	<script src="/static/js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="/static/js/main.js" ></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 	<!-- Notifications area -->
@@ -272,21 +274,21 @@
 								Nuevo Administrador
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action="/guardar_administrador" method="POST">
 									<div class="mdl-grid">
 									<div class="mdl-cell mdl-cell--12-col">
 									<legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATOS ADMINISTRADOR</legend><br>
 									</div>
 									<div class="mdl-cell mdl-cell--12-col">
 									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIAdmin">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIAdmin" name="DNIAdmin">
 												<label class="mdl-textfield__label" for="DNIAdmin">Documento</label>
 												<span class="mdl-textfield__error">Documento Inválido</span>
 											</div>
 									</div>
 									<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameAdmin">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameAdmin" name="NameAdmin">
 												<label class="mdl-textfield__label" for="NameAdmin">Nombre</label>
 												<span class="mdl-textfield__error">Nombre Inválido</span>
 											</div>
@@ -294,14 +296,14 @@
 									
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneAdmin">
+												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneAdmin" name="phoneAdmin">
 												<label class="mdl-textfield__label" for="phoneAdmin">Teléfono</label>
 												<span class="mdl-textfield__error">Teléfono Inválido</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="email" id="emailAdmin">
+												<input class="mdl-textfield__input" type="email" id="emailAdmin" name="emailAdmin">
 												<label class="mdl-textfield__label" for="emailAdmin">Correo Electrónico</label>
 												<span class="mdl-textfield__error">Correo Electrónico Inválido</span>
 											</div>
@@ -312,14 +314,14 @@
 									</div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ]*(\.[0-9]+)?" id="UserNameAdmin">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ]*(\.[0-9]+)?" id="UserNameAdmin" name="UserNameAdmin">
 												<label class="mdl-textfield__label" for="UserNameAdmin">Usuario</label>
 												<span class="mdl-textfield__error">Usuario Inválido</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="password" id="passwordAdmin">
+												<input class="mdl-textfield__input" type="password" id="passwordAdmin" name="passwordAdmin"  >
 												<label class="mdl-textfield__label" for="passwordAdmin">Contraseña</label>
 												<span class="mdl-textfield__error">Contraseña Inválida</span>
 											</div>
@@ -331,32 +333,33 @@
 											<div class="mdl-grid">
 												<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
 													<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-														<input type="radio" id="option-1" class="mdl-radio__button" name="options" value="avatar-male.png">
+														<input type="radio" id="option-1" class="mdl-radio__button" name="options" value="avatar5.png" >
 														<img src="/static/assets/img/avatar5.png" alt="avatar" style="height: 75px"; width="75px;" ">
 														<span class="mdl-radio__label">Avatar 1</span>
 													</label>
 										</div>
 										<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
 													<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-														<input type="radio" id="option-2" class="mdl-radio__button" name="options" value="avatar-female.png">
+														<input type="radio" id="option-2" class="mdl-radio__button" name="options" value="avatar4.png">
 														<img src="/static/assets/img/avatar4.png" alt="avatar" style="height: 75px"; width="75px;" ">
 														<span class="mdl-radio__label">Avatar 2</span>
 													</label>
 										</div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
 													<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
-														<input type="radio" id="option-3" class="mdl-radio__button" name="options" value="avatar-male2.png">
+														<input type="radio" id="option-3" class="mdl-radio__button" name="options" value="avatar2.png">
 														<img src="/static/assets/img/avatar2.png" alt="avatar" style="height: 75px"; width="75px;" ">
 														<span class="mdl-radio__label">Avatar 3</span>
 													</label>
 											</div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
 													<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
-														<input type="radio" id="option-4" class="mdl-radio__button" name="options" value="avatar-female2.png">
+														<input type="radio" id="option-4" class="mdl-radio__button" name="options" value="avatar3.png">
 														<img src="/static/assets/img/avatar3.png" alt="avatar" style="height: 75px"; width="75px;" ">
 														<span class="mdl-radio__label">Avatar 4</span>
 													</label>
 											</div>
+											<input type="hidden" id="avatarSelection" name="avatarAdmin" value="">
 											</div>
 										</div>
 									</div>
@@ -377,7 +380,7 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-success text-center tittles">
-								LISTA ADMINISTRADORES
+								Lista Administradores
 							</div>
 							<div class="full-width panel-content">
 								<form action="#">
@@ -392,49 +395,74 @@
 									</div>
 								</form>
 								<div class="mdl-list">
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>1. David Londoño</span>
-											<span class="mdl-list__item-sub-title">CC. 1024500000</span>
-											<span class="mdl-list__item-sub-title">Correo. david@hamor.com</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-											<i class="zmdi zmdi-more"></i>
-										</a>
-										<!-- Contenedor para las opciones de editar y eliminar -->
-										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
-										</div>
-									</div>
-
-									<div class="mdl-list">
-										<div class="mdl-list__item mdl-list__item--two-line">
-											<span class="mdl-list__item-primary-content">
-												<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-												<span>2. Elizabeth Pérez</span>
-												<span class="mdl-list__item-sub-title">CC. 1024500000</span>
-												<span class="mdl-list__item-sub-title">Correo. elizabeth@hamor.com</span>
-											</span>
-											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-												<i class="zmdi zmdi-more"></i>
-											</a>
-											<!-- Contenedor para las opciones de editar y eliminar -->
-											<div class="options-container" style="display: none;">
-												<a href="#!">Editar</a>
-												<a href="#!">Eliminar</a>
+									{% if administradores %}
+										{% for i in range(administradores|length) %}
+											<div class="mdl-list__item mdl-list__item--two-line">
+												<span class="mdl-list__item-primary-content">
+													<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
+													<span>{{ loop.index + 1 }}. {{ administradores[i][1] }}</span>
+													<span class="mdl-list__item-sub-title">Documento: {{ administradores[i][0] }}</span>
+													<span class="mdl-list__item-sub-title">Teléfono: {{ administradores[i][2] }}</span>
+													<span class="mdl-list__item-sub-title">Correo: {{ administradores[i][3] }}</span>
+													<span class="mdl-list__item-sub-title">Avatar: {{ administradores[i][4] }}</span>
+												</span>
+												<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+													<i class="zmdi zmdi-more"></i>
+												</a>
+												<!-- Contenedor para las opciones de editar y eliminar -->
+												<div class="options-container" style="display: none;">
+													<a href="#!">Editar</a>
+													<a href="#!">Eliminar</a>
+												</div>
 											</div>
-										</div>
-									
+										{% endfor %}
+									{% else %}
+										<p>No hay administradores disponibles.</p>
+									{% endif %}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	</section>
+	<!-- Modal genérico para mensajes -->
+	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="modalMessageContent"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	</section>
+	<script>
+		// Mostrar el modal con el mensaje correspondiente
+		$(document).ready(function() {
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			{% for category, message in messages %}
+			$('#messageModal').modal('show');
+			$('#messageModalLabel').text("{{ category | capitalize }}");
+			$('#modalMessageContent').text("{{ message }}");
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+		});
+	</script>
+	<script>
+		document.getElementById('btn-addAdmin').addEventListener('click', function() {
+			var selectedAvatar = document.querySelector('input[name="options"]:checked').value;
+			document.getElementById('avatarSelection').value = selectedAvatar;
+		});
+	</script>
 	<script>
 		function toggleOptions(element) {
 			// Obtener el contenedor de opciones

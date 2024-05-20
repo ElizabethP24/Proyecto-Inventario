@@ -17,6 +17,7 @@
 	<script src="/static/js/sweetalert2.min.js" ></script>
 	<script src="/static/js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="/static/js/main.js" ></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<!-- Notifications area -->
@@ -271,35 +272,35 @@
 								Nuevo Producto
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action="/guardar_producto" method="post" enctype="multipart/form-data">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; INFORMACIÓN DEL PRODUCTO</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9- ]*(\.[0-9]+)?" id="BarCode">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9- ]*(\.[0-9]+)?" id="CodeProduct" name="CodeProduct">
 												<label class="mdl-textfield__label" for="BarCode">Código</label>
 												<span class="mdl-textfield__error">Código Inválido</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct" name="NameProduct">
 												<label class="mdl-textfield__label" for="NameProduct">Nombre</label>
 												<span class="mdl-textfield__error">Nombre Inválido</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StrockProduct">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StockProduct" name="StockProduct">
 												<label class="mdl-textfield__label" for="StrockProduct">Unidades</label>
 												<span class="mdl-textfield__error">Unidades Inválidas</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct">
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct" name="PriceProduct">
 												<label class="mdl-textfield__label" for="PriceProduct">Precio</label>
 												<span class="mdl-textfield__error">Precio Inválido</span>
 											</div>
@@ -307,39 +308,33 @@
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Categoría</legend><br>
 									    </div>
-										<div class="mdl-cell mdl-cell--12-col">
-											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Seleccionar Categoría</option>
-													<option value="">Alimentos</option>
-													<option value="">Medicamentos</option>7
-													<option value="">Juguetes</option>
-													<option value="">Accesorios</option>
-												</select>
-											</div>
-										</div>
+										<select class="mdl-textfield__input" name="CategoryProduct">
+											<option value="" disabled="" selected="">Seleccionar Categoría</option>
+											<option value="Alimentos">Alimentos</option>
+											<option value="Medicamentos">Medicamentos</option>
+											<option value="Juguetes">Juguetes</option>
+											<option value="Accesorios">Accesorios</option>
+										</select>
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; INFORMACIÓN ADICIONAL</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Seleccione el proveedor del producto </option>
-													<option value="">Proveedor 1</option>
-													<option value="">Proveedor  2</option>
-												</select>
+												<input class="mdl-textfield__input" type="text" id="provider_id" name="provider_id" required>
+												<label class="mdl-textfield__label" for="provider_id">Ingrese el ID del proveedor</label>
 											</div>
-									    </div>
+										</div>
+										<div id="validation-message" class="mdl-cell mdl-cell--12-col"></div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text"  id="modelProduct">
+												<input class="mdl-textfield__input" type="text"  id="modelProduct" name="DescriptionProduct">
 												<label class="mdl-textfield__label" for="modelProduct">Descripción</label>
 												<span class="mdl-textfield__error">Descripción Inválida</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" id="markProduct">
+												<input class="mdl-textfield__input" type="text" id="markProduct" name="markProduct">
 												<label class="mdl-textfield__label" for="markProduct">Marca</label>
 												<span class="mdl-textfield__error">Marca Inválida</span>
 											</div>
@@ -349,21 +344,17 @@
 									    </div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
-												<input type="date" class="mdl-textfield__input">
+												<input type="date" class="mdl-textfield__input" id="dateProduct" name="dateProduct">
 											</div>
 										</div>
+										<select class="mdl-textfield__input" name="statusProduct">
+											<option value="" disabled="" selected="">Seleccione el estatus</option>
+											<option value="Activo">Activo</option>
+											<option value="Desactivado">Desactivado</option>
+										</select>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Seleccione el estatus</option>
-													<option value="">Activo</option>
-													<option value="">Desactivado</option>
-												</select>
-											</div>
-										</div>
-										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield">
-												<input type="file">
+												<input type="file" name="fileProduct">
 											</div>
 										</div>
 									</div>
@@ -496,6 +487,59 @@
 			</div>
 		</div>
 	</section>
+	<!-- Modal genérico para mensajes -->
+	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="modalMessageContent"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	</section>
+	<script>
+		// Mostrar el modal con el mensaje correspondiente
+		$(document).ready(function() {
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			{% for category, message in messages %}
+			$('#messageModal').modal('show');
+			$('#messageModalLabel').text("{{ category | capitalize }}");
+			$('#modalMessageContent').text("{{ message }}");
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+		});
+	</script>
+	<script>
+		document.getElementById('provider_id').addEventListener('input', function () {
+			const providerId = this.value;
+			if (providerId) {
+				fetch(`/validate_provider/${providerId}`)
+					.then(response => response.json())
+					.then(data => {
+						const messageElement = document.getElementById('validation-message');
+						if (data.exists) {
+							messageElement.innerHTML = '<span style="color: green;">El proveedor existe.</span>';
+						} else {
+							messageElement.innerHTML = '<span style="color: red;">El proveedor no existe.</span>';
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			} else {
+				document.getElementById('validation-message').innerHTML = '';
+			}
+		});
+	</script>
 	<script>
 		function toggleOptions(element) {
 			// Obtener el contenedor de opciones

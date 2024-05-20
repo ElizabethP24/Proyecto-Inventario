@@ -17,6 +17,7 @@
 	<script src="/static/js/sweetalert2.min.js" ></script>
 	<script src="/static/js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="/static/js/main.js" ></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<!-- Notifications area -->
@@ -271,21 +272,21 @@
 								Nueva Categoría
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action="/guardar_categoria" method="POST">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATOS CATEGORÍA</legend><br>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameCategory">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameCategory" name="NameCategory">
 												<label class="mdl-textfield__label" for="NameCategory">Nombre</label>
 												<span class="mdl-textfield__error">Nombre Inválido</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descriptionCategory">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descriptionCategory" name="descriptionCategory">
 												<label class="mdl-textfield__label" for="descriptionCategory">Descripción</label>
 												<span class="mdl-textfield__error">Descripción Inválida</span>
 											</div>
@@ -323,75 +324,64 @@
 									</div>
 								</form>
 								<div class="mdl-list">
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>1. ALIMENTOS</span>
-											<span class="mdl-list__item-sub-title">Descripción</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-											<i class="zmdi zmdi-more"></i>
-										</a>
-										<!-- Contenedor para las opciones de editar y eliminar -->
-										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
+									{% if categorias %}
+										{% for categoria in categorias %}
+										<div class="mdl-list__item mdl-list__item--two-line">
+											<span class="mdl-list__item-primary-content">
+												<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
+												<span>{{ loop.index }}. {{ categoria[0] }}</span>
+												<span class="mdl-list__item-sub-title">Descripción: {{ categoria[1] }}</span>
+											</span>
+											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+												<i class="zmdi zmdi-more"></i>
+											</a>
+											<!-- Contenedor para las opciones de editar y eliminar -->
+											<div class="options-container" style="display: none;">
+												<a href="#!">Editar</a>
+												<a href="#!">Eliminar</a>
+											</div>
 										</div>
-									</div>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>2. MEDICAMENTOS</span>
-											<span class="mdl-list__item-sub-title">Descripción</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-											<i class="zmdi zmdi-more"></i>
-										</a>
-										<!-- Contenedor para las opciones de editar y eliminar -->
-										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
-										</div>
-									</div>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>3. JUGUETES</span>
-											<span class="mdl-list__item-sub-title">Descripción</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-											<i class="zmdi zmdi-more"></i>
-										</a>
-										<!-- Contenedor para las opciones de editar y eliminar -->
-										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
-										</div>
-									</div>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>4. ACCESORIOS</span>
-											<span class="mdl-list__item-sub-title">Descripción</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-											<i class="zmdi zmdi-more"></i>
-										</a>
-										<!-- Contenedor para las opciones de editar y eliminar -->
-										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
-										</div>
-									</div>
+										{% endfor %}
+									{% else %}
+									<p>No hay categorías disponibles.</p>
+									{% endif %}
 								</div>
 							</div>
 						</div>
-						
 					</div>
 				</div>
 			</div>
+		<!-- Modal genérico para mensajes -->
+	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="modalMessageContent"></p>
+				</div>
+			</div>
 		</div>
+	</div>
 	</section>
+	<script>
+		// Mostrar el modal con el mensaje correspondiente
+		$(document).ready(function() {
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			{% for category, message in messages %}
+			$('#messageModal').modal('show');
+			$('#messageModalLabel').text("{{ category | capitalize }}");
+			$('#modalMessageContent').text("{{ message }}");
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+		});
+	</script>
 	<script>
 		function toggleOptions(element) {
 			// Obtener el contenedor de opciones

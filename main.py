@@ -62,9 +62,6 @@ def home():
 @app.route('/inventory')
 def inventory():
     return render_template('inventory.html')
-@app.route('/products')
-def products():
-    return render_template('products.html')
 @app.route('/providers')
 def providers():
     # Llamar a la función que obtiene los proveedores
@@ -85,6 +82,13 @@ def admin():
     administradores = listar_administradores()
     # Renderizar la plantilla con los datos de los administradores
     return render_template('admin.html', administradores=administradores)
+
+@app.route('/products')
+def products():
+    # Llamar a la función que obtiene los productos
+    productos = listar_productos()
+    # Renderizar la plantilla con los datos de los productos
+    return render_template('products.html', productos=productos)
 
 @app.route('/client')
 def client():
@@ -432,6 +436,45 @@ def listar_clientes():
             conexion.close()
     
     return proveedores
+
+def listar_productos():
+    print("Entrando en la función listar_productos)")
+    productos = []
+    try:
+        # Establecer la conexión a la base de datos
+        conexion = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="huella_amor"
+        )
+        print("Conexión establecida correctamente")
+        # Crear un cursor para ejecutar consultas SQL
+        cursor = conexion.cursor()
+
+        print("Ejecutando consulta SQL")
+        # Ejecutar una consulta para obtener todos los productops
+        cursor.execute("""
+            SELECT idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod 
+            FROM productos
+        """)
+
+        # Obtener todos los registros de productos
+        productos = cursor.fetchall()
+        print("Productos obtenidos:", productos)  # Verificar los datos en la consola
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        productos = []
+    
+    finally:
+        # Cerrar el cursor y la conexión en la sección finally
+        if cursor:
+            cursor.close()
+        if conexion:
+            conexion.close()
+    
+    return productos
 
 @app.route('/validate_provider/<provider_id>', methods=['GET'])
 def validate_provider(provider_id):

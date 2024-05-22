@@ -393,84 +393,20 @@
 							</ul>
 						</nav>
 						<div class="full-width text-center" style="padding: 30px 0;">
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-								<div class="mdl-card__title">
-									<img src="/static/assets/img/alimento2.png" alt="product" class="img-responsive">
-								</div>
-								<div class="mdl-card__supporting-text">
-									<small>Código: 1000023</small><br>
-									<small>Existencias: 20 unidades</small><br>
-									<small>Categorias: Alimemtos</small><br>
-									<small>Precio: $77.900</small><br>
-								</div>
-								<div class="mdl-card__actions mdl-card--border">
-									Alimento Mirringo Adultos 8kg
-									<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-										<i class="zmdi zmdi-more"></i>
-									</a>
-									<!-- Contenedor para las opciones de editar y eliminar -->
-									<div class="options-container" style="display: none;">
-										<a href="#!">Editar</a>
-										<a href="#!">Eliminar</a>
-									</div>
-								</div>
-							</div>
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-								<div class="mdl-card__title">
-									<img src="/static/assets/img/alimento.png" alt="product" class="img-responsive">
-								</div>
-								<div class="mdl-card__supporting-text">
-									<small>Código: 1000024</small><br>
-									<small>Existencias: 15 unidades</small><br>
-									<small>Categorias: Alimemtos</small><br>
-									<small>Precio: $117.900</small><br>
-								</div>
-								<div class="mdl-card__actions mdl-card--border">
-									Alimento Oh mai gat 8kg Caseros y Delicados
-									<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-										<i class="zmdi zmdi-more"></i>
-									</a>
-									<!-- Contenedor para las opciones de editar y eliminar -->
-									<div class="options-container" style="display: none;">
-										<a href="#!">Editar</a>
-										<a href="#!">Eliminar</a>
-									</div>
-								</div>
-							</div>
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-									<div class="mdl-card__title">
-										<img src="/static/assets/img/alimento3.png" alt="product" class="img-responsive">
-									</div>
-									<div class="mdl-card__supporting-text">
-										<small>Código: 1000025</small><br>
-										<small>Existencias: 5 unidades</small><br>
-										<small>Categorias: Alimemtos</small><br>
-										<small>Precio: $213.700</small><br>
-									</div>
-									<div class="mdl-card__actions mdl-card--border">
-										Alimento Cat Chow Defense Plus 15kg
-										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-											<i class="zmdi zmdi-more"></i>
-										</a>
-										<!-- Contenedor para las opciones de editar y eliminar -->
-										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
-										</div>
-									</div>
-								</div>
-								<div class="mdl-card mdl-shadow--2dp full-width product-card">
+							{% if productos %}
+								{% for producto in productos %}
+									<div class="mdl-card mdl-shadow--2dp full-width product-card">
 										<div class="mdl-card__title">
-											<img src="/static/assets/img/alimento4.png" alt="product" class="img-responsive">
+											<img src="{{ url_for('static', filename='assets/img/' ~ producto[10]) }}" alt="product" class="img-responsive">
 										</div>
 										<div class="mdl-card__supporting-text">
-											<small>Código: 1000026</small><br>
-											<small>Existencias: 2 unidades</small><br>
-											<small>Categorias: Alimemtos</small><br>
-											<small>Precio: $145.000</small><br>
+											<small>Código: {{ producto[0] }}</small><br>
+											<small>Existencias: {{ producto[2] }} unidades</small><br>
+											<small>Categorias: {{ producto[4] }}</small><br>
+											<small>Precio: ${{ producto[3] }}</small><br>
 										</div>
 										<div class="mdl-card__actions mdl-card--border">
-											Alimento Proplan Natural Fiber 3 Kg
+											{{ producto[1] }}
 											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
 												<i class="zmdi zmdi-more"></i>
 											</a>
@@ -479,13 +415,16 @@
 												<a href="#!">Editar</a>
 												<a href="#!">Eliminar</a>
 											</div>
-										</div>		
-							</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								<p>No hay productos disponibles.</p>
+							{% endif %}
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	</section>
 	<!-- Modal genérico para mensajes -->
 	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">

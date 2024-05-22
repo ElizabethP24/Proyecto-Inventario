@@ -2,10 +2,11 @@ import mysql.connector
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
+from PIL import Image 
 
 # Crear la aplicación Flask y configurar la carpeta estática
 app = Flask(__name__, 
-            static_folder='C:\\Users\\Eli\\Downloads\\ProyectoInventario\\static', 
+            static_folder='D:\\ELIZA\SISTEMAS\\INGENIERIA\\SEMESTRE II\\ESTRUCT DATOS APLICADA\\ProyectoInventario\\static', 
             static_url_path='/static')
 
 # Genera una clave secreta aleatoria
@@ -18,11 +19,10 @@ conexion = mysql.connector.connect(
     password="",
     database="huella_amor"
 )
+app.secret_key = 'your_secret_key'
+app.config['UPLOAD_FOLDER'] = 'D:\\ELIZA\SISTEMAS\\INGENIERIA\\SEMESTRE II\\ESTRUCT DATOS APLICADA\\ProyectoInventario\\static\\assets\\img'
 
-# Configuración de la carpeta de subida
-UPLOAD_FOLDER = 'ProyectoInventario/static/assets/img'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -55,13 +55,43 @@ def login():
         return redirect(url_for('index'))
 
 # Definir la ruta para la página home.html
+
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    
+    # Establecer la conexión a la base de datos
+    conexion = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="huella_amor"
+)
+    try:
+        cursor = conexion.cursor()
+        tables = ['administradores', 'categorias', 'clientes', 'proveedores', 'categorias', 'productos', 'ventas']
+        counts = {}
+
+        for table in tables:
+            query = f"SELECT COUNT(*) FROM {table}"
+            cursor.execute(query)
+            counts[table] = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return render_template('home.html', counts=counts)
+    except Exception as e:
+        print(f"Error al obtener los registros: {e}")
+        return render_template('home.html', counts={})
+    
 
 @app.route('/inventory')
 def inventory():
-    return render_template('inventory.html')
+    # Llamar a la función que obtiene el inventario
+    inventario = listar_inventario()
+    # Renderizar la plantilla con los datos del inventario
+    return render_template('inventory.html', inventario=inventario)
+
 @app.route('/providers')
 def providers():
     # Llamar a la función que obtiene los proveedores
@@ -99,7 +129,11 @@ def client():
 
 @app.route('/sales')
 def sales():
-    return render_template('sales.html')
+    # Llamar a la función que obtiene las ventas
+    ventas= listar_ventas()
+    # Renderizar la plantilla con los datos de las ventas
+    return render_template('sales.html', ventas=ventas)
+
 @app.route('/guardar_proveedor', methods=['POST'])
 def guardar_proveedor():
     # Obtener los datos del formulario
@@ -228,58 +262,153 @@ def ejecutar_consulta(consulta, valores):
         conexion.rollback()
         return False
     
+    
+@app.route('/guardar_venta', methods=['POST'])
+def guardar_venta():
+    # Obtener los datos del formulario
+    fecha = request.form['dateSales']
+    codigoprod = request.form['CodeProduct']
+    nombreprod = request.form['NameProduct']
+    cantidad = int(request.form['StockProduct'])
+    precio = float(request.form['PriceProduct'])
+    categoria = request.form['CategoryProduct']
+    dni = request.form['DNIClient']
+    nombre = request.form['NameClient']
+    pago = request.form['Pay']
+    total = float(request.form['TotalPay'])
+
+    try:
+        # Crear una conexión y un cursor
+        conexion.connect()  # Reconnect if connection is closed
+        cursor = conexion.cursor()
+
+        # Obtener la cantidad actual del producto
+        cursor.execute("SELECT unidadesprod FROM productos WHERE idproductos = %s", (codigoprod,))
+        producto = cursor.fetchone()
+        
+        if producto:
+            unidades_disponibles = int(producto[0])  # Convertir unidades_disponibles a entero
+            
+            # Verificar si hay suficiente stock
+            if unidades_disponibles >= cantidad:
+                # Calcular la nueva cantidad
+                nueva_cantidad = unidades_disponibles - cantidad
+
+                # Actualizar la cantidad del producto en la base de datos
+                cursor.execute("UPDATE productos SET unidadesprod = %s WHERE idproductos = %s", (nueva_cantidad, codigoprod))
+
+                # Preparar la consulta de inserción para la venta
+                consulta_venta = """
+                INSERT INTO ventas (fecharegistro, idprod, productovent, unidadesvent, preciovent, categoriaprod, doccliente, nombrecliente, mediopago, totalvent)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                valores_venta = (fecha, codigoprod, nombreprod, cantidad, precio, categoria, dni, nombre, pago, total)
+                
+                # Ejecutar la consulta de inserción para la venta
+                cursor.execute(consulta_venta, valores_venta)
+                
+                # Confirmar los cambios
+                conexion.commit()
+
+                flash("Venta agregada exitosamente", "success")
+            else:
+                flash("No hay suficiente stock disponible", "error")
+        else:
+            flash("Producto no encontrado", "error")
+
+        # Cerrar el cursor y la conexión
+        cursor.close()
+        conexion.close()
+        return redirect(url_for('sales'))
+    
+    except mysql.connector.Error as error:
+        print("Error al insertar venta:", error)
+        conexion.rollback()
+        flash("Error al insertar venta: {}".format(error), "error")
+        return redirect(url_for('sales'))
+
+    
+def ejecutar_consulta(consulta, valores):
+    try:
+        if not conexion.is_connected():
+            conexion.connect()  # Reconnect if connection is closed
+        cursor = conexion.cursor()
+        cursor.execute(consulta, valores)
+        conexion.commit()
+        cursor.close()
+        return True
+    except mysql.connector.Error as error:
+        print("Error al ejecutar consulta:", error)
+        conexion.rollback()
+        return False
 @app.route('/guardar_producto', methods=['POST'])
 def guardar_producto():
-    # Obtener los datos del formulario
-    codigo = request.form['CodeProduct']
-    nombre = request.form['NameProduct']
-    unidades = request.form['StockProduct']
-    precio = request.form['PriceProduct']
-    categoria = request.form['CategoryProduct']
-    proveedor = request.form['provider_id']
-    descripcion = request.form['DescriptionProduct']
-    marca = request.form['markProduct']
-    fecha = request.form['dateProduct']
-    estado = request.form['statusProduct']
-    imagen = request.files['fileProduct']  # Obtener el objeto de archivo completo
-        
-    # Preparar la consulta de inserción
-    consulta = "INSERT INTO productos (idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    valores = (codigo, nombre, unidades, precio, categoria, proveedor, descripcion, marca, fecha, estado, imagen.filename)  # Guardar solo el nombre del archivo en la base de datos
-    
     try:
+        codigo = request.form['CodeProduct']
+        nombre = request.form['NameProduct']
+        unidades = request.form['StockProduct']
+        precio = request.form['PriceProduct']
+        categoria = request.form['CategoryProduct']
+        proveedor = request.form['provider_id']
+        descripcion = request.form['DescriptionProduct']
+        marca = request.form['markProduct']
+        fecha = request.form['dateProduct']
+        estado = request.form['statusProduct']
+        imagen = request.files['fileProduct']
+        
+        consulta = "INSERT INTO productos (idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        valores = (codigo, nombre, unidades, precio, categoria, proveedor, descripcion, marca, fecha, estado, imagen.filename)
+        
         if ejecutar_consulta(consulta, valores):
-            # Pasar el archivo completo a la función upload_product()
-            upload_product(imagen)
-            flash("Producto agregado exitosamente", "success")
+            if upload_product(imagen):
+                flash("Producto agregado exitosamente", "success")
+            else:
+                flash("Error al subir la imagen del producto", "error")
         else:
-            flash("Error al insertar producto", "error")
+            flash("Error al insertar producto en la base de datos", "error")
+     
     except Exception as e:
         print("Error:", e)
-        flash("Error al insertar producto", "error")
+        flash(f"Error al insertar producto: {e}", "error")
     
     return redirect(url_for('products'))
 
+
 def upload_product(file):
     if file.filename == '':
-        flash('No se ha seleccionado ningún archivo')
-        return redirect(url_for('products'))  
+        flash('No se ha seleccionado ningún archivo', 'error')
+        return False
     
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         
-        # Verificar si el directorio existe, y si no, crearlo
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
-            os.makedirs(app.config['UPLOAD_FOLDER'])
+            try:
+                os.makedirs(app.config['UPLOAD_FOLDER'])
+            except Exception as e:
+                flash(f'Error al crear el directorio: {e}', 'error')
+                return False
         
-        file.save(filepath)
-        
-        flash('Archivo subido exitosamente', 'success')
-        return redirect(url_for('products'))
+        try:
+            file.save(filepath)
+            # Verificar si el archivo guardado es una imagen válida
+            try:
+                with Image.open(filepath) as img:
+                    img.verify()  # Verifica que el archivo es una imagen válida
+                flash('Archivo subido exitosamente', 'success')
+                return True
+            except (IOError, SyntaxError) as e:
+                flash(f'El archivo subido no es una imagen válida: {e}', 'error')
+                os.remove(filepath)  # Eliminar el archivo no válido
+                return False
+        except Exception as e:
+            flash(f'Error al guardar el archivo: {e}', 'error')
+            return False
     else:
         flash('Tipo de archivo no permitido', 'error')
-        return redirect(url_for('products'))
+        return False
+
     
 def listar_proveedores():
     print("Entrando en la función listar_proveedores()")
@@ -475,6 +604,84 @@ def listar_productos():
             conexion.close()
     
     return productos
+
+def listar_ventas():
+    print("Entrando en la función listar_ventas()")
+    ventas = []
+    try:
+        # Establecer la conexión a la base de datos
+        conexion = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="huella_amor"
+        )
+        print("Conexión establecida correctamente")
+        # Crear un cursor para ejecutar consultas SQL
+        cursor = conexion.cursor()
+
+        print("Ejecutando consulta SQL")
+        # Ejecutar una consulta para obtener todos los ventas
+        cursor.execute("""
+            SELECT fecharegistro,idprod, productovent, unidadesvent, preciovent, categoriaprod, doccliente, nombrecliente, mediopago, totalvent 
+            FROM ventas
+        """)
+
+        # Obtener todos los registros de ventas
+        ventas = cursor.fetchall()
+        print("Ventas obtenidos:",ventas)  # Verificar los datos en la consola
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        ventas = []
+    
+    finally:
+        # Cerrar el cursor y la conexión en la sección finally
+        if cursor:
+            cursor.close()
+        if conexion:
+            conexion.close()
+    
+    return ventas
+
+def listar_inventario():
+    print("Entrando en la función listar_inventary)")
+    inventario = []
+    try:
+        # Establecer la conexión a la base de datos
+        conexion = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="huella_amor"
+        )
+        print("Conexión establecida correctamente")
+        # Crear un cursor para ejecutar consultas SQL
+        cursor = conexion.cursor()
+
+        print("Ejecutando consulta SQL")
+        # Ejecutar una consulta para obtener todos los productops
+        cursor.execute("""
+            SELECT idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod 
+            FROM productos
+        """)
+
+        # Obtener todos los registros de inventario
+        inventario = cursor.fetchall()
+        print("Inventario obtenido:", inventario)  # Verificar los datos en la consola
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        inventario = []
+    
+    finally:
+        # Cerrar el cursor y la conexión en la sección finally
+        if cursor:
+            cursor.close()
+        if conexion:
+            conexion.close()
+    
+    return inventario
 
 @app.route('/validate_provider/<provider_id>', methods=['GET'])
 def validate_provider(provider_id):

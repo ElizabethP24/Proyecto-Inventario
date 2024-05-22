@@ -254,7 +254,7 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Ingrese los datos solicitados para agregar un Producto al Inventario
+					Inventario de Productos "Huella de Amor"
 				</p>
 			</div>
 		</section>
@@ -265,8 +265,8 @@
 					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
 						<thead>
 							<tr>
-								<th class="mdl-data-table__cell--non-numeric">Nombre</th>
-								<th>Código</th>
+								<th class="mdl-data-table__cell--non-numeric">Código Producto</th>
+								<th>Nombre</th>
 								<th>Existencias</th>
 								<th>Precio</th>
 								<th>Categoría</th>
@@ -275,72 +275,36 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">Alimento Mirringo Adultos 8kg</td>
-								<td>1000023</td>
-								<td>20 unidades</td>
-								<td>$77.900</td>
-								<td>Alimentos</td>
-								<td>Activo</td>
-								<td><a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-									<i class="zmdi zmdi-more"></i>
-								</a>
-								<!-- Contenedor para las opciones de editar y eliminar -->
-								<div class="options-container" style="display: none;">
-									<a href="#!">Editar</a>
-									<a href="#!">Eliminar</a>
-								</div></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">Alimento Oh mai gat 8kg Caseros y Delicados</td>
-								<td>1000024</td>
-								<td>15 unidades</td>
-								<td>$117.900</td>
-								<td>Alimentos</td>
-								<td>Activo</td>
-								<td><a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-									<i class="zmdi zmdi-more"></i>
-								</a>
-								<!-- Contenedor para las opciones de editar y eliminar -->
-								<div class="options-container" style="display: none;">
-									<a href="#!">Editar</a>
-									<a href="#!">Eliminar</a>
-								</div></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">Alimento Cat Chow Defense Plus 15kg</td>
-								<td>1000025</td>
-								<td>5 unidades</td>
-								<td>$213.700</td>
-								<td>Alimentos</td>
-								<td>Activo</td>
-								<td><a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-									<i class="zmdi zmdi-more"></i>
-								</a>
-								<!-- Contenedor para las opciones de editar y eliminar -->
-								<div class="options-container" style="display: none;">
-									<a href="#!">Editar</a>
-									<a href="#!">Eliminar</a>
-								</div></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">Alimento Proplan Natural Fiber 3 Kg</td>
-								<td>1000026</td>
-								<td>2 unidades</td>
-								<td>$145.000</td>
-								<td>Alimentos</td>
-								<td>Activo</td>
-								<td><a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-									<i class="zmdi zmdi-more"></i>
-								</a>
-								<!-- Contenedor para las opciones de editar y eliminar -->
-								<div class="options-container" style="display: none;">
-									<a href="#!">Editar</a>
-									<a href="#!">Eliminar</a>
-								</div></td>
-							</tr>
+							{% if inventario %}
+								{% for producto in inventario %}
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">{{ producto[0] }}</td>
+									<td>{{ producto[1] }}</td>
+									<td>{{ producto[2] }} unidades</td>
+									<td>${{ producto[3] }}</td>
+									<td>{{ producto[4] }}</td>
+									<td>{{ producto[9] }}</td>
+									<td>
+										<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+											<i class="zmdi zmdi-more"></i>
+										</a>
+										<!-- Contenedor para las opciones de editar y eliminar -->
+										<div class="options-container" style="display: none;">
+											<a href="#!">Editar</a>
+											<a href="#!">Eliminar</a>
+										</div>
+									</td>
+								</tr>
+								{% endfor %}
+							{% else %}
+								<tr>
+									<td colspan="7" class="mdl-data-table__cell--non-numeric">No hay productos disponibles.</td>
+								</tr>
+							{% endif %}
 						</tbody>
 					</table>
+				</div>
+				
 				</div>
 			</div>
 		</div>

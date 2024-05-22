@@ -17,6 +17,7 @@
 	<script src="/static/js/sweetalert2.min.js" ></script>
 	<script src="/static/js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="/static/js/main.js" ></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<!-- Notifications area -->
@@ -271,88 +272,78 @@
 								Nueva Venta
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action="/guardar_venta" method="POST">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; INFORMACIÓN DEL PRODUCTO</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9- ]*(\.[0-9]+)?" id="BarCode">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9- ]*(\.[0-9]+)?" id="BarCode" name="CodeProduct">
 												<label class="mdl-textfield__label" for="BarCode">Código</label>
 												<span class="mdl-textfield__error">Código Inválido</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
-												<input type="date" class="mdl-textfield__input">
+												<input type="date" class="mdl-textfield__input" name="dateSales">
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct" name="NameProduct">
 												<label class="mdl-textfield__label" for="NameProduct">Producto</label>
 												<span class="mdl-textfield__error">Producto Inválido</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StrockProduct">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StrockProduct" name="StockProduct">
 												<label class="mdl-textfield__label" for="StrockProduct">Unidades</label>
 												<span class="mdl-textfield__error">Unidades Inválidas</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct">
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct" name="PriceProduct">
 												<label class="mdl-textfield__label" for="PriceProduct">Precio</label>
 												<span class="mdl-textfield__error">Precio Inválido</span>
 											</div>
 										</div>
-                                        <div class="mdl-cell mdl-cell--12-col">
-											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Seleccionar Categoría</option>
-													<option value="">Alimentos</option>
-													<option value="">Medicamentos</option>7
-													<option value="">Juguetes</option>
-													<option value="">Accesorios</option>
-												</select>
-											</div>
-										</div>
+                                        <select class="mdl-textfield__input" name="CategoryProduct">
+											<option value="" disabled="" selected="">Seleccionar Categoría</option>
+											<option value="Alimentos">Alimentos</option>
+											<option value="Medicamentos">Medicamentos</option>
+											<option value="Juguetes">Juguetes</option>
+											<option value="Accesorios">Accesorios</option>
+										</select>
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Cliente</legend><br>
 									    </div>
                                         <div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIClient">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIClient" name="DNIClient">
 												<label class="mdl-textfield__label" for="DNIClient">Documento</label>
 												<span class="mdl-textfield__error">Documento Inválido</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameClient">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameClient" name="NameClient">
 												<label class="mdl-textfield__label" for="NameClient">Nombre</label>
 												<span class="mdl-textfield__error">Nombre Inválido</span>
 											</div>
 									    </div>
-										
-                                        <div class="mdl-cell mdl-cell--12-col">
-											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Seleccione el medio de pago </option>
-													<option value="">Efectivo</option>
-													<option value="">Crédito</option>
-                                                    <option value="">Transferencia</option>
-                                                    <option value="">QR</option>
-												</select>
-											</div>
-									    </div>
-									
+										<select class="mdl-textfield__input" name="Pay">
+											<option value="" disabled="" selected="">Seleccionar Medio de Pago</option>
+											<option value="Efectivo">Efectivo</option>
+											<option value="Crédito">Crédito</option>
+											<option value="Transferencia">Transferencia</option>
+											<option value="QR">QR</option>
+										</select>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text"  id="modelProduct">
+												<input class="mdl-textfield__input" type="text"  id="modelProduct" name="TotalPay">
 												<label class="mdl-textfield__label" for="modelProduct">Total a pagar</label>
 												<span class="mdl-textfield__error">Total Inválido</span>
 											</div>
@@ -372,66 +363,56 @@
 			</div>
 			<div class="mdl-tabs__panel" id="tabListSales">
 				<div class="mdl-grid">
-					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--12-col-desktop">
+					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width divider-menu-h"></div>
-		<div class="mdl-grid">
-			<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--12-col-desktop">
-				<div class="table-responsive">
-					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
-						<thead>
-							<tr>
-								<th class="mdl-data-table__cell--non-numeric">Fecha</th>
-								<th>Código Producto</th>
-								<th>Unidades</th>
-								<th>Precio</th>
-								<th>Cliente</th>
-								<th>Medio de Pago</th>
-								<th>Total</th>
-								<th>Options</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">11/04/2024</td>
-								<td>10000023</td>
-								<td>2</td>
-								<td>$77.900</td>
-								<td>Jhon López</td>
-								<td>Crédito</td>
-								<td>$155.800</td>
-								<td><a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-									<i class="zmdi zmdi-more"></i>
-								</a>
-								<!-- Contenedor para las opciones de editar y eliminar -->
-								<div class="options-container" style="display: none;">
-									<a href="#!">Editar</a>
-									<a href="#!">Eliminar</a>
-								</div></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">22/04/2024</td>
-								<td>10000024</td>
-								<td>1</td>
-								<td>$117.900</td>
-								<td>Juan Quintero</td>
-								<td>Efectivo</td>
-								<td>$117.900</td>
-								<td><a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-									<i class="zmdi zmdi-more"></i>
-								</a>
-								<!-- Contenedor para las opciones de editar y eliminar -->
-								<div class="options-container" style="display: none;">
-									<a href="#!">Editar</a>
-									<a href="#!">Eliminar</a>
-								</div></td>
-							</tr>
-						</tbody>
-					</table>
-				    </div>
+						<div class="table-responsive">
+							<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
+								<thead>
+									<tr>
+										<th class="mdl-data-table__cell--non-numeric">Fecha</th>
+										<th>Código Producto</th>
+										<th>Nombre Producto</th>
+										<th>Unidades</th>
+										<th>Precio</th>
+										<th>Doc.Cliente</th>
+										<th>Cliente</th>
+										<th>Medio de Pago</th>
+										<th>Categoria</th>
+										<th>Total</th>
+										<th>Options</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for venta in ventas %}
+									<tr>
+										<td class="mdl-data-table__cell--non-numeric">{{ venta[0] }}</td>
+										<td>{{ venta[1] }}</td>
+										<td>{{ venta[2] }}</td>
+										<td>{{ venta[3] }}</td>
+										<td>{{ venta[4] }}</td>
+										<td>{{ venta[6] }}</td>
+										<td>{{ venta[7] }}</td>
+										<td>{{ venta[8] }}</td>
+										<td>{{ venta[5] }}</td>
+										<td>{{ venta[9] }}</td>
+										<td>
+											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+												<i class="zmdi zmdi-more"></i>
+											</a>
+											<!-- Contenedor para las opciones de editar y eliminar -->
+											<div class="options-container" style="display: none;">
+												<a href="#!">Editar</a>
+												<a href="#!">Eliminar</a>
+											</div>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	</section>
 	<script>
 		function toggleOptions(element) {
@@ -444,6 +425,37 @@
 				optionsContainer.style.display = 'none';
 			}
 		}
+	</script>
+	<!-- Modal genérico para mensajes -->
+	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="modalMessageContent"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Mostrar el modal con el mensaje correspondiente
+		$(document).ready(function() {
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			{% for category, message in messages %}
+			$('#messageModal').modal('show');
+			$('#messageModalLabel').text("{{ category | capitalize }}");
+			$('#modalMessageContent').text("{{ message }}");
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+		});
 	</script>
 </body>
 </html>

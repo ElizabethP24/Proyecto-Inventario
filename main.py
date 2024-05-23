@@ -300,40 +300,64 @@ def obtener_cliente(dni):
 
 @app.route('/guardar_venta', methods=['POST'])
 def guardar_venta():
-    fecha = request.form['dateSales']
-    codigoprod = request.form['CodeProduct']
-    nombreprod = request.form['NameProduct']
-    cantidad = int(request.form['StockProduct'])
-    precio = float(request.form['PriceProduct'])
-    dni = request.form['DNIClient']
-    nombre = request.form['NameClient']
-    pago = request.form['Pay']
-    
+    # Obtener los datos del formulario
+    fecha = request.form.get('dateSales', '')
+    codigoprod = request.form.get('CodeProduct', '')
+    nombreprod = request.form.get('NameProduct', '')
+    cantidad = request.form.get('StockProduct', '')
+    precio = request.form.get('PriceProduct', '')
+    dni = request.form.get('DNIClient', '')
+    nombre = request.form.get('NameClient', '')
+    pago = request.form.get('Pay', '')
+
+    # Validación de datos
+    if not (fecha and codigoprod and nombreprod and cantidad and precio and dni and nombre and pago):
+        flash("Por favor, complete todos los campos del formulario.", "error")
+        return redirect(url_for('sales'))
+
+    try:
+        cantidad = int(cantidad)
+        precio = float(precio)
+    except ValueError:
+        flash("Unidades y Precio deben ser números válidos.", "error")
+        return redirect(url_for('sales'))
+
     # Calcular el total
     total = cantidad * precio
 
     try:
-        conexion.connect()  # Reconnect if connection is closed
+        # Conectar a la base de datos
+        if not conexion.is_connected():
+            conexion.connect()
+
         cursor = conexion.cursor()
 
+        # Obtener la cantidad actual del producto y la categoría
         cursor.execute("SELECT unidadesprod, categoriaprod FROM productos WHERE idproductos = %s", (codigoprod,))
         producto = cursor.fetchone()
-        
+
         if producto:
             unidades_disponibles = int(producto[0])
             categoria = producto[1]  # Obtiene la categoría del producto
+
             if unidades_disponibles >= cantidad:
+                # Calcular la nueva cantidad
                 nueva_cantidad = unidades_disponibles - cantidad
+
+                # Actualizar la cantidad del producto en la base de datos
                 cursor.execute("UPDATE productos SET unidadesprod = %s WHERE idproductos = %s", (nueva_cantidad, codigoprod))
 
+                # Preparar la consulta de inserción para la venta
                 consulta_venta = """
                 INSERT INTO ventas (fecharegistro, idprod, productovent, unidadesvent, preciovent, categoriaprod, doccliente, nombrecliente, mediopago, totalvent)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 valores_venta = (fecha, codigoprod, nombreprod, cantidad, precio, categoria, dni, nombre, pago, total)
                 cursor.execute(consulta_venta, valores_venta)
-                
+
+                # Confirmar los cambios
                 conexion.commit()
+
                 flash("Venta agregada exitosamente", "success")
             else:
                 flash("No hay suficiente stock disponible", "error")
@@ -343,12 +367,13 @@ def guardar_venta():
         cursor.close()
         conexion.close()
         return redirect(url_for('sales'))
-    
+
     except mysql.connector.Error as error:
         print("Error al insertar venta:", error)
         conexion.rollback()
         flash("Error al insertar venta: {}".format(error), "error")
         return redirect(url_for('sales'))
+
 
 
     
@@ -706,8 +731,6 @@ def check_provider_exists(provider_id):
     cursor.close()
     conexion.close()
     return result[0] > 0
-    
-
 
 if __name__ == '__main__':
     app.run(debug=True)

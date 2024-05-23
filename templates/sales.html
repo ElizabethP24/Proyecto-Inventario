@@ -310,14 +310,7 @@
 												<span class="mdl-textfield__error">Precio Inválido</span>
 											</div>
 										</div>
-                                        <select class="mdl-textfield__input" name="CategoryProduct">
-											<option value="" disabled="" selected="">Seleccionar Categoría</option>
-											<option value="Alimentos">Alimentos</option>
-											<option value="Medicamentos">Medicamentos</option>
-											<option value="Juguetes">Juguetes</option>
-											<option value="Accesorios">Accesorios</option>
-										</select>
-										<div class="mdl-cell mdl-cell--12-col">
+                                    	<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Cliente</legend><br>
 									    </div>
                                         <div class="mdl-cell mdl-cell--12-col">
@@ -343,9 +336,8 @@
 										</select>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text"  id="modelProduct" name="TotalPay">
-												<label class="mdl-textfield__label" for="modelProduct">Total a pagar</label>
-												<span class="mdl-textfield__error">Total Inválido</span>
+												<input class="mdl-textfield__input" type="text" id="TotalPay" name="TotalPay" readonly>
+												<label class="mdl-textfield__label" for="TotalPay">Total a pagar</label>
 											</div>
 										</div>
 									</div>
@@ -457,5 +449,53 @@
 			{% endwith %}
 		});
 	</script>
+	<script>
+		document.getElementById('BarCode').addEventListener('change', function() {
+			var codigo = this.value;
+			if (codigo.trim() !== '') {
+				fetch('/obtener_producto/' + codigo)
+					.then(response => response.json())
+					.then(data => {
+						if (!data.error) {
+							document.getElementById('NameProduct').value = data.nombre;
+							document.getElementById('PriceProduct').value = data.precio;
+							document.getElementById('StrockProduct').value = data.unidades;
+							calcularTotal();
+						} else {
+							alert(data.error);
+						}
+					})
+					.catch(error => console.error('Error:', error));
+			}
+		});
+	
+		document.getElementById('StrockProduct').addEventListener('change', calcularTotal);
+	
+		function calcularTotal() {
+			var cantidad = parseInt(document.getElementById('StrockProduct').value);
+			var precio = parseFloat(document.getElementById('PriceProduct').value);
+			if (!isNaN(cantidad) && !isNaN(precio)) {
+				var total = cantidad * precio;
+				document.getElementById('TotalPay').value = total.toFixed(2);
+			}
+		}
+	
+		document.getElementById('DNIClient').addEventListener('change', function() {
+			var dni = this.value;
+			if (dni.trim() !== '') {
+				fetch('/obtener_cliente/' + dni)
+					.then(response => response.json())
+					.then(data => {
+						if (!data.error) {
+							document.getElementById('NameClient').value = data.nombre;
+						} else {
+							alert(data.error);
+						}
+					})
+					.catch(error => console.error('Error:', error));
+			}
+		});
+	</script>
+	
 </body>
 </html>

@@ -263,60 +263,83 @@ def ejecutar_consulta(consulta, valores):
         return False
     
     
+@app.route('/obtener_producto/<codigo>', methods=['GET'])
+def obtener_producto(codigo):
+    try:
+        cursor = conexion.cursor(dictionary=True)
+        cursor.execute("SELECT nombreprod, precioprod, unidadesprod, categoriaprod FROM productos WHERE idproductos = %s", (codigo,))
+        producto = cursor.fetchone()
+        cursor.close()
+        if producto:
+            return jsonify({
+                "nombre": producto['nombreprod'],
+                "precio": producto['precioprod'],
+                "unidades": producto['unidadesprod'],
+                "categoria": producto['categoriaprod']
+            }), 200
+        else:
+            return jsonify({"error": "Producto no encontrado"}), 404
+    except mysql.connector.Error as error:
+        return jsonify({"error": str(error)}), 500
+
+
+@app.route('/obtener_cliente/<dni>', methods=['GET'])
+def obtener_cliente(dni):
+    try:
+        cursor = conexion.cursor(dictionary=True)
+        cursor.execute("SELECT nombrecliente FROM clientes WHERE doccliente = %s", (dni,))
+        cliente = cursor.fetchone()
+        cursor.close()
+        if cliente:
+            return jsonify({"nombre": cliente['nombrecliente']}), 200
+        else:
+            return jsonify({"error": "Cliente no encontrado"}), 404
+    except mysql.connector.Error as error:
+        return jsonify({"error": str(error)}), 500
+
+
 @app.route('/guardar_venta', methods=['POST'])
 def guardar_venta():
-    # Obtener los datos del formulario
     fecha = request.form['dateSales']
     codigoprod = request.form['CodeProduct']
     nombreprod = request.form['NameProduct']
     cantidad = int(request.form['StockProduct'])
     precio = float(request.form['PriceProduct'])
-    categoria = request.form['CategoryProduct']
     dni = request.form['DNIClient']
     nombre = request.form['NameClient']
     pago = request.form['Pay']
-    total = float(request.form['TotalPay'])
+    
+    # Calcular el total
+    total = cantidad * precio
 
     try:
-        # Crear una conexión y un cursor
         conexion.connect()  # Reconnect if connection is closed
         cursor = conexion.cursor()
 
-        # Obtener la cantidad actual del producto
-        cursor.execute("SELECT unidadesprod FROM productos WHERE idproductos = %s", (codigoprod,))
+        cursor.execute("SELECT unidadesprod, categoriaprod FROM productos WHERE idproductos = %s", (codigoprod,))
         producto = cursor.fetchone()
         
         if producto:
-            unidades_disponibles = int(producto[0])  # Convertir unidades_disponibles a entero
-            
-            # Verificar si hay suficiente stock
+            unidades_disponibles = int(producto[0])
+            categoria = producto[1]  # Obtiene la categoría del producto
             if unidades_disponibles >= cantidad:
-                # Calcular la nueva cantidad
                 nueva_cantidad = unidades_disponibles - cantidad
-
-                # Actualizar la cantidad del producto en la base de datos
                 cursor.execute("UPDATE productos SET unidadesprod = %s WHERE idproductos = %s", (nueva_cantidad, codigoprod))
 
-                # Preparar la consulta de inserción para la venta
                 consulta_venta = """
                 INSERT INTO ventas (fecharegistro, idprod, productovent, unidadesvent, preciovent, categoriaprod, doccliente, nombrecliente, mediopago, totalvent)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 valores_venta = (fecha, codigoprod, nombreprod, cantidad, precio, categoria, dni, nombre, pago, total)
-                
-                # Ejecutar la consulta de inserción para la venta
                 cursor.execute(consulta_venta, valores_venta)
                 
-                # Confirmar los cambios
                 conexion.commit()
-
                 flash("Venta agregada exitosamente", "success")
             else:
                 flash("No hay suficiente stock disponible", "error")
         else:
             flash("Producto no encontrado", "error")
 
-        # Cerrar el cursor y la conexión
         cursor.close()
         conexion.close()
         return redirect(url_for('sales'))
@@ -327,20 +350,8 @@ def guardar_venta():
         flash("Error al insertar venta: {}".format(error), "error")
         return redirect(url_for('sales'))
 
+
     
-def ejecutar_consulta(consulta, valores):
-    try:
-        if not conexion.is_connected():
-            conexion.connect()  # Reconnect if connection is closed
-        cursor = conexion.cursor()
-        cursor.execute(consulta, valores)
-        conexion.commit()
-        cursor.close()
-        return True
-    except mysql.connector.Error as error:
-        print("Error al ejecutar consulta:", error)
-        conexion.rollback()
-        return False
 @app.route('/guardar_producto', methods=['POST'])
 def guardar_producto():
     try:
@@ -365,8 +376,7 @@ def guardar_producto():
             else:
                 flash("Error al subir la imagen del producto", "error")
         else:
-            flash("Error al insertar producto en la base de datos", "error")
-     
+            flash("Error al insertar producto en la base de datos", "error") 
     except Exception as e:
         print("Error:", e)
         flash(f"Error al insertar producto: {e}", "error")

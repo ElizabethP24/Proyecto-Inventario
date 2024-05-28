@@ -1,0 +1,39 @@
+digraph {
+	"Inventario Huella de Amor" [label="Inventario Huella de Amor"]
+	"Inventario Huella de Amor" -> Ventas
+	Ventas [label=Ventas]
+	Ventas -> Alimentos
+	Alimentos [label=Alimentos]
+	Ventas -> Medicamentos
+	Medicamentos [label=Medicamentos]
+	Ventas -> Juguetes
+	Juguetes [label=Juguetes]
+	Ventas -> Accesorios
+	Accesorios [label=Accesorios]
+	"Inventario Huella de Amor" -> Proveedores
+	Proveedores [label=Proveedores]
+	Proveedores -> Alimentos
+	Alimentos [label=Alimentos]
+	Proveedores -> Medicamentos
+	Medicamentos [label=Medicamentos]
+	Proveedores -> Juguetes
+	Juguetes [label=Juguetes]
+	Proveedores -> Accesorios
+	Accesorios [label=Accesorios]
+	"Inventario Huella de Amor" -> Productos
+	Productos [label=Productos]
+	Productos -> Alimentos
+	Alimentos [label=Alimentos]
+	Productos -> Medicamentos
+	Medicamentos [label=Medicamentos]
+	Productos -> Juguetes
+	Juguetes [label=Juguetes]
+	Productos -> Accesorios
+	Accesorios [label=Accesorios]
+	"Inventario Huella de Amor" -> Usuarios
+	Usuarios [label=Usuarios]
+	Usuarios -> Administradores
+	Administradores [label=Administradores]
+	Usuarios -> Clientes
+	Clientes [label=Clientes]
+}

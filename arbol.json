@@ -1,0 +1,338 @@
+{
+    "nombre": "Inventario Huella de Amor",
+    "datos": [],
+    "hijos": [
+        {
+            "nombre": "Ventas",
+            "datos": [],
+            "hijos": [
+                {
+                    "nombre": "Alimentos",
+                    "datos": [
+                        {
+                            "idventas": 1,
+                            "fecharegistro": "2024-05-22",
+                            "productovent": "Alimento Mirringo Adultos 8kg",
+                            "unidadesvent": 10,
+                            "preciovent": 77900,
+                            "doccliente": "1053666666",
+                            "nombrecliente": " Sebasti\u00e1n Quintero",
+                            "mediopago": "Efectivo",
+                            "totalvent": 779000,
+                            "categoria": "Alimentos",
+                            "idprod": 100010
+                        },
+                        {
+                            "idventas": 2,
+                            "fecharegistro": "2024-05-22",
+                            "productovent": "Alimento Oh mai gat Azul 8kg ",
+                            "unidadesvent": 2,
+                            "preciovent": 117900,
+                            "doccliente": "1053867000",
+                            "nombrecliente": "Jhon L\u00f3pez",
+                            "mediopago": "Transferencia",
+                            "totalvent": 235800,
+                            "categoria": "Alimentos",
+                            "idprod": 100011
+                        },
+                        {
+                            "idventas": 3,
+                            "fecharegistro": "2024-05-22",
+                            "productovent": "Alimento Proplan Natural Fiber 3 Kg",
+                            "unidadesvent": 8,
+                            "preciovent": 145000,
+                            "doccliente": "1053666666",
+                            "nombrecliente": "Sebasti\u00e1n Quintero",
+                            "mediopago": "Transferencia",
+                            "totalvent": 145000,
+                            "categoria": "Alimentos",
+                            "idprod": 100013
+                        },
+                        {
+                            "idventas": 4,
+                            "fecharegistro": null,
+                            "productovent": "Alimento Mirringo Adultos 8kg",
+                            "unidadesvent": 1,
+                            "preciovent": 77900,
+                            "doccliente": "1053666666",
+                            "nombrecliente": "Sebasti\u00e1n Quintero",
+                            "mediopago": "Efectivo",
+                            "totalvent": 77900,
+                            "categoria": "Alimentos",
+                            "idprod": 100010
+                        },
+                        {
+                            "idventas": 5,
+                            "fecharegistro": "2024-05-22",
+                            "productovent": "Alimento Mirringo Adultos 8kg",
+                            "unidadesvent": 1,
+                            "preciovent": 77900,
+                            "doccliente": "1053666666",
+                            "nombrecliente": "Sebasti\u00e1n Quintero",
+                            "mediopago": "Cr\u00e9dito",
+                            "totalvent": 77900,
+                            "categoria": "Alimentos",
+                            "idprod": 100010
+                        },
+                        {
+                            "idventas": 6,
+                            "fecharegistro": "2024-05-27",
+                            "productovent": "Alimento Cat Chow Defense Plus 15kg",
+                            "unidadesvent": 1,
+                            "preciovent": 213700,
+                            "doccliente": "1053666666",
+                            "nombrecliente": "Sebasti\u00e1n Quintero",
+                            "mediopago": "Transferencia",
+                            "totalvent": 213700,
+                            "categoria": "Alimentos",
+                            "idprod": 100012
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Medicamentos",
+                    "datos": [],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Juguetes",
+                    "datos": [],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Accesorios",
+                    "datos": [],
+                    "hijos": []
+                }
+            ]
+        },
+        {
+            "nombre": "Proveedores",
+            "datos": [],
+            "hijos": [
+                {
+                    "nombre": "Alimentos",
+                    "datos": [
+                        {
+                            "docproveedores": 1053888888,
+                            "nombreprov": "Juan Ramirez",
+                            "direccionprov": "Cll 66 #50-20",
+                            "telefonoprov": "3197000000",
+                            "correoprov": "juanr@gmail.com",
+                            "categoria": "Alimentos"
+                        },
+                        {
+                            "docproveedores": 1053999999,
+                            "nombreprov": "Marcela Clavijo",
+                            "direccionprov": "Cll 66 #50-20",
+                            "telefonoprov": "3197342114",
+                            "correoprov": "marcela@gmail.com",
+                            "categoria": "Alimentos"
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Medicamentos",
+                    "datos": [
+                        {
+                            "docproveedores": 1053222222,
+                            "nombreprov": "David Henao",
+                            "direccionprov": "Calle 67",
+                            "telefonoprov": "31899999",
+                            "correoprov": "david@gmail.com",
+                            "categoria": "Medicamentos"
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Juguetes",
+                    "datos": [
+                        {
+                            "docproveedores": 1053555555,
+                            "nombreprov": "Sebastian Marin",
+                            "direccionprov": "Cll 66 #50-20",
+                            "telefonoprov": "3197342000",
+                            "correoprov": "sebastian@gmail.com",
+                            "categoria": "Juguetes"
+                        },
+                        {
+                            "docproveedores": 1053666666,
+                            "nombreprov": "Christian Montoya",
+                            "direccionprov": "calle 12",
+                            "telefonoprov": "319700001",
+                            "correoprov": "christian@gmail.com",
+                            "categoria": "Juguetes"
+                        },
+                        {
+                            "docproveedores": 1053877777,
+                            "nombreprov": "Esteban Benitez",
+                            "direccionprov": "Cll 66 #50-20",
+                            "telefonoprov": "3197342114",
+                            "correoprov": "esteban@gmail.com",
+                            "categoria": "Juguetes"
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Accesorios",
+                    "datos": [],
+                    "hijos": []
+                }
+            ]
+        },
+        {
+            "nombre": "Productos",
+            "datos": [],
+            "hijos": [
+                {
+                    "nombre": "Alimentos",
+                    "datos": [
+                        {
+                            "idproductos": 100010,
+                            "nombreprod": "Alimento Mirringo Adultos 8kg",
+                            "unidadesprod": "18",
+                            "precioprod": 77900,
+                            "categoria": "Alimentos",
+                            "proveedorprod": "1053222222",
+                            "descripcionprod": "Alimento Seco ",
+                            "marcaprod": "Mirringo",
+                            "fecharegistro": "2024-05-19",
+                            "estatusprod": "Activo",
+                            "imagenprod": "alimento2.PNG"
+                        },
+                        {
+                            "idproductos": 100011,
+                            "nombreprod": "Alimento Oh mai gat Azul 8kg ",
+                            "unidadesprod": "13",
+                            "precioprod": 117900,
+                            "categoria": "Alimentos",
+                            "proveedorprod": "1053222222",
+                            "descripcionprod": "Alimento Seco ",
+                            "marcaprod": "Oh mai cat",
+                            "fecharegistro": "2024-05-19",
+                            "estatusprod": "Activo",
+                            "imagenprod": "alimento.PNG"
+                        },
+                        {
+                            "idproductos": 100012,
+                            "nombreprod": "Alimento Cat Chow Defense Plus 15kg",
+                            "unidadesprod": "4",
+                            "precioprod": 213700,
+                            "categoria": "Alimentos",
+                            "proveedorprod": "1053555555",
+                            "descripcionprod": "Alimento Seco ",
+                            "marcaprod": "Cat Chow",
+                            "fecharegistro": "2024-05-19",
+                            "estatusprod": "Activo",
+                            "imagenprod": "alimento3.PNG"
+                        },
+                        {
+                            "idproductos": 100013,
+                            "nombreprod": "Alimento Proplan Natural Fiber 3 Kg",
+                            "unidadesprod": "0",
+                            "precioprod": 145000,
+                            "categoria": "Alimentos",
+                            "proveedorprod": "1053555555",
+                            "descripcionprod": "Alimento Seco ",
+                            "marcaprod": "Proplan",
+                            "fecharegistro": "2024-05-19",
+                            "estatusprod": "Activo",
+                            "imagenprod": "alimento4.PNG"
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Medicamentos",
+                    "datos": [
+                        {
+                            "idproductos": 100015,
+                            "nombreprod": "Alimento Seco Gatsy Adulto  7 Kg",
+                            "unidadesprod": "12",
+                            "precioprod": 77900,
+                            "categoria": "Medicamentos",
+                            "proveedorprod": "1053222222",
+                            "descripcionprod": "Alimento Seco ",
+                            "marcaprod": "Gatsy",
+                            "fecharegistro": "2024-05-22",
+                            "estatusprod": "Activo",
+                            "imagenprod": "alimento5.PNG"
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Juguetes",
+                    "datos": [],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Accesorios",
+                    "datos": [],
+                    "hijos": []
+                }
+            ]
+        },
+        {
+            "nombre": "Usuarios",
+            "datos": [],
+            "hijos": [
+                {
+                    "nombre": "Administradores",
+                    "datos": [
+                        {
+                            "docadmin": 1,
+                            "nombreadmin": "eliza",
+                            "telefonoadmin": "3190000000",
+                            "correoadmin": "eliza@gmail.com",
+                            "usuarioadmin": "eliza",
+                            "contrasenaadmin": "123456789",
+                            "avataradmin": "avatar1.png"
+                        },
+                        {
+                            "docadmin": 1053878000,
+                            "nombreadmin": "Carlos Benitez",
+                            "telefonoadmin": "3197342000",
+                            "correoadmin": "carlos@gmail.com",
+                            "usuarioadmin": "carlos",
+                            "contrasenaadmin": "123456789",
+                            "avataradmin": "avatar5.png"
+                        }
+                    ],
+                    "hijos": []
+                },
+                {
+                    "nombre": "Clientes",
+                    "datos": [
+                        {
+                            "doccliente": 1053666666,
+                            "nombrecliente": "Sebasti\u00e1n Quintero",
+                            "direccioncliente": "calle 66 ",
+                            "telefonocliente": "3197342114",
+                            "correocliente": "sebastian@gmail.com"
+                        },
+                        {
+                            "doccliente": 1053867000,
+                            "nombrecliente": "Jhon L\u00f3pez",
+                            "direccioncliente": "calle 66 ",
+                            "telefonocliente": "3197342114",
+                            "correocliente": "jhon@gmail.com"
+                        },
+                        {
+                            "doccliente": 1053867777,
+                            "nombrecliente": "Eliana Medina",
+                            "direccioncliente": "calle 66 ",
+                            "telefonocliente": "3197342114",
+                            "correocliente": "eliana@gmail.com"
+                        }
+                    ],
+                    "hijos": []
+                }
+            ]
+        }
+    ]
+}

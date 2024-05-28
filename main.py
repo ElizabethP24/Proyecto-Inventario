@@ -3,6 +3,11 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
 from PIL import Image 
+from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy.orm import sessionmaker
+from graphviz import Digraph
+from datetime import date, datetime
+import json
 
 # Crear la aplicación Flask y configurar la carpeta estática
 app = Flask(__name__, 
@@ -267,7 +272,7 @@ def ejecutar_consulta(consulta, valores):
 def obtener_producto(codigo):
     try:
         cursor = conexion.cursor(dictionary=True)
-        cursor.execute("SELECT nombreprod, precioprod, unidadesprod, categoriaprod FROM productos WHERE idproductos = %s", (codigo,))
+        cursor.execute("SELECT nombreprod, precioprod, unidadesprod, categoria FROM productos WHERE idproductos = %s", (codigo,))
         producto = cursor.fetchone()
         cursor.close()
         if producto:
@@ -349,7 +354,7 @@ def guardar_venta():
 
                 # Preparar la consulta de inserción para la venta
                 consulta_venta = """
-                INSERT INTO ventas (fecharegistro, idprod, productovent, unidadesvent, preciovent, categoriaprod, doccliente, nombrecliente, mediopago, totalvent)
+                INSERT INTO ventas (fecharegistro, idprod, productovent, unidadesvent, preciovent, categoria, doccliente, nombrecliente, mediopago, totalvent)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 valores_venta = (fecha, codigoprod, nombreprod, cantidad, precio, categoria, dni, nombre, pago, total)
@@ -392,7 +397,7 @@ def guardar_producto():
         estado = request.form['statusProduct']
         imagen = request.files['fileProduct']
         
-        consulta = "INSERT INTO productos (idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        consulta = "INSERT INTO productos (idproductos, nombreprod, unidadesprod, precioprod, categoria, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         valores = (codigo, nombre, unidades, precio, categoria, proveedor, descripcion, marca, fecha, estado, imagen.filename)
         
         if ejecutar_consulta(consulta, valores):
@@ -463,7 +468,7 @@ def listar_proveedores():
         print("Ejecutando consulta SQL")
         # Ejecutar una consulta para obtener todos los proveedores
         cursor.execute("""
-            SELECT docproveedores, nombreprov, direccionprov, telefonoprov, correoprov, categoriaprod 
+            SELECT docproveedores, nombreprov, direccionprov, telefonoprov, correoprov, categoria
             FROM proveedores
         """)
 
@@ -619,7 +624,7 @@ def listar_productos():
         print("Ejecutando consulta SQL")
         # Ejecutar una consulta para obtener todos los productops
         cursor.execute("""
-            SELECT idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod 
+            SELECT idproductos, nombreprod, unidadesprod, precioprod, categoria, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod 
             FROM productos
         """)
 
@@ -658,7 +663,7 @@ def listar_ventas():
         print("Ejecutando consulta SQL")
         # Ejecutar una consulta para obtener todos los ventas
         cursor.execute("""
-            SELECT fecharegistro,idprod, productovent, unidadesvent, preciovent, categoriaprod, doccliente, nombrecliente, mediopago, totalvent 
+            SELECT fecharegistro,idprod, productovent, unidadesvent, preciovent, categoria, doccliente, nombrecliente, mediopago, totalvent 
             FROM ventas
         """)
 
@@ -697,7 +702,7 @@ def listar_inventario():
         print("Ejecutando consulta SQL")
         # Ejecutar una consulta para obtener todos los productops
         cursor.execute("""
-            SELECT idproductos, nombreprod, unidadesprod, precioprod, categoriaprod, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod 
+            SELECT idproductos, nombreprod, unidadesprod, precioprod, categoria, proveedorprod, descripcionprod, marcaprod, fecharegistro, estatusprod, imagenprod 
             FROM productos
         """)
 
@@ -732,8 +737,152 @@ def check_provider_exists(provider_id):
     conexion.close()
     return result[0] > 0
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    ################################################### Árbol #####################################################
+# Definir nodos
+class Nodo:
+    def __init__(self, nombre, datos=None):
+        self.nombre = nombre
+        self.datos = datos or []
+        self.hijos = []
+
+    def agregar_hijo(self, nodo_hijo):
+        self.hijos.append(nodo_hijo)
+
+    def __repr__(self):
+        return f"Nodo({self.nombre}, {self.datos})"
+
+    def a_diccionario(self):
+        return {
+            "nombre": self.nombre,
+            "datos": self.datos,
+            "hijos": [hijo.a_diccionario() for hijo in self.hijos]
+        }
+
+    @classmethod
+    def desde_diccionario(cls, data):
+        nodo = cls(data["nombre"], data["datos"])
+        for hijo_data in data["hijos"]:
+            nodo.agregar_hijo(cls.desde_diccionario(hijo_data))
+        return nodo
+
+# Conexión base de datos
+DATABASE_URI = 'mysql+mysqlconnector://root:@localhost/huella_amor'
+engine = create_engine(DATABASE_URI)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Cargar las tablas
+metadata = MetaData()
+metadata.reflect(bind=engine)
+administradores = Table('administradores', metadata, autoload_with=engine)
+clientes = Table('clientes', metadata, autoload_with=engine)
+productos = Table('productos', metadata, autoload_with=engine)
+proveedores = Table('proveedores', metadata, autoload_with=engine)
+ventas = Table('ventas', metadata, autoload_with=engine)
+
+def convertir_a_serializable(obj):
+    """Convierte un objeto a un formato serializable por JSON."""
+    if isinstance(obj, (date, datetime)):
+        return obj.isoformat()
+    raise TypeError(f"Tipo {type(obj)} no es serializable")
+
+def obtener_datos_por_categoria(tabla, categoria_columna):
+    if categoria_columna is None:
+        rows = session.query(tabla).all()
+    else:
+        rows = session.query(tabla).filter_by(categoria=categoria_columna).all()
+    
+    datos = []
+    for row in rows:
+        row_dict = {}
+        for col in row._mapping.keys():
+            val = row._mapping[col]
+            row_dict[col] = convertir_a_serializable(val) if isinstance(val, (date, datetime)) else val
+        datos.append(row_dict)
+    return datos
+
+def construir_arbol():
+    raiz = Nodo("Inventario Huella de Amor")
+
+    categorias = ["Alimentos", "Medicamentos", "Juguetes", "Accesorios"]
+    tablas = [
+        ("Ventas", ventas),
+        ("Proveedores", proveedores),
+        ("Productos", productos),
+        ("Usuarios", [
+            ("Administradores", administradores),
+            ("Clientes", clientes)
+        ])
+    ]
+
+    for nombre_principal, tabla in tablas:
+        nodo_principal = Nodo(nombre_principal)
+        if nombre_principal == "Usuarios":
+            for sub_nombre, sub_tabla in tabla:
+                nodo_sub = Nodo(sub_nombre, obtener_datos_por_categoria(sub_tabla, None))
+                nodo_principal.agregar_hijo(nodo_sub)
+        else:
+            for categoria in categorias:
+                nodo_sub = Nodo(categoria, obtener_datos_por_categoria(tabla, categoria))
+                nodo_principal.agregar_hijo(nodo_sub)
+
+        raiz.agregar_hijo(nodo_principal)
+
+    return raiz
+
+def guardar_arbol_en_archivo(arbol, archivo):
+    with open(archivo, 'w') as file:
+        json.dump(arbol.a_diccionario(), file, indent=4)
+
+def cargar_arbol_desde_archivo(archivo):
+    with open(archivo, 'r') as file:
+        data = json.load(file)
+        return Nodo.desde_diccionario(data)
+
+def visualizar_arbol(nodo):
+    dot = Digraph()
+
+    def agregar_nodo(dot, nodo):
+        dot.node(nodo.nombre, label=nodo.nombre)
+        for hijo in nodo.hijos:
+            dot.edge(nodo.nombre, hijo.nombre)
+            agregar_nodo(dot, hijo)
+
+    agregar_nodo(dot, nodo)
+    return dot
+
+# Construir y mostrar el árbol
+arbol = construir_arbol()
+print(arbol)
+
+# Guardar el árbol en un archivo
+guardar_arbol_en_archivo(arbol, 'arbol.json')
+
+# Cargar el árbol desde un archivo
+arbol_cargado = cargar_arbol_desde_archivo('arbol.json')
+print(arbol_cargado)
+
+# Visualizar el árbol
+dot = visualizar_arbol(arbol_cargado)
+dot.render('arbol_visual', format='pdf')
+
+def buscar_en_arbol(nodo, nombre_busqueda):
+    if nodo.nombre == nombre_busqueda:
+        return nodo
+
+    for hijo in nodo.hijos:
+        resultado = buscar_en_arbol(hijo, nombre_busqueda)
+        if resultado:
+            return resultado
+
+    return None
+
+# Ejemplo de búsqueda
+resultado_busqueda = buscar_en_arbol(arbol_cargado, "Alimentos")
+if resultado_busqueda:
+    print(f"Resultados encontrados: {resultado_busqueda.datos}")
+else:
+    print("No se encontraron resultados.")
 
 if __name__ == '__main__':
     # Ejecutar la aplicación Flask

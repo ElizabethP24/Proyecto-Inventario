@@ -34,7 +34,7 @@
     <section class="full-width text-center" style="padding: 40px 0;">
         <h3 class="text-center tittles">RESUMEN MENSUAL</h3>
         <!-- Tiles -->
-        <article class="full-width tile">
+        <a href="{{ url_for('admin') }}" class="full-width tile">
             <div class="tile-text">
                 <span class="text-condensedLight">
                     {{ counts.administradores }}<br>
@@ -42,8 +42,8 @@
                 </span>
             </div>
             <i class="zmdi zmdi-account tile-icon"></i>
-        </article>
-        <article class="full-width tile">
+        </a>
+        <a href="{{ url_for('client') }}" class="full-width tile">
             <div class="tile-text">
                 <span class="text-condensedLight">
                     {{ counts.clientes }}<br>
@@ -51,8 +51,8 @@
                 </span>
             </div>
             <i class="zmdi zmdi-accounts tile-icon"></i>
-        </article>
-        <article class="full-width tile">
+        </a>
+        <a href="{{ url_for('providers') }}" class="full-width tile">
             <div class="tile-text">
                 <span class="text-condensedLight">
                     {{ counts.proveedores }}<br>
@@ -60,8 +60,8 @@
                 </span>
             </div>
             <i class="zmdi zmdi-truck tile-icon"></i>
-        </article>
-        <article class="full-width tile">
+        </a>
+        <a href="{{ url_for('categories') }}" class="full-width tile">
             <div class="tile-text">
                 <span class="text-condensedLight">
                     {{ counts.categorias }}<br>
@@ -69,8 +69,8 @@
                 </span>
             </div>
             <i class="zmdi zmdi-label tile-icon"></i>
-        </article>
-        <article class="full-width tile">
+        </a>
+        <a href="{{ url_for('products') }}" class="full-width tile">
             <div class="tile-text">
                 <span class="text-condensedLight">
                     {{ counts.productos }}<br>
@@ -78,8 +78,8 @@
                 </span>
             </div>
             <i class="zmdi zmdi-washing-machine tile-icon"></i>
-        </article>
-        <article class="full-width tile">
+        </a>
+        <a href="{{ url_for('sales') }}" class="full-width tile">
             <div class="tile-text">
                 <span class="text-condensedLight">
                     {{ counts.ventas }}<br>
@@ -87,11 +87,7 @@
                 </span>
             </div>
             <i class="zmdi zmdi-shopping-cart tile-icon"></i>
-        </article>
+        </a>
     </section>
-</section>
-			</div>
-		</section>
-	</section>
 </body>
 </html>

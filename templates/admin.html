@@ -187,13 +187,13 @@
 													<span class="mdl-list__item-sub-title">Correo: {{ administradores[i][3] }}</span>
 													<span class="mdl-list__item-sub-title">Avatar: {{ administradores[i][4] }}</span>
 												</span>
-												<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+												<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this, {{ i }})">
 													<i class="zmdi zmdi-more"></i>
 												</a>
 												<!-- Contenedor para las opciones de editar y eliminar -->
 												<div class="options-container" style="display: none;">
-													<a href="#!">Editar</a>
-													<a href="#!">Eliminar</a>
+													<a href="{{ url_for('editar_administrador', docadmin=administradores[i][0]) }}">Editar</a>
+													<a href="{{ url_for('eliminar_administrador', docadmin=administradores[i][0]) }}">Eliminar</a>
 												</div>
 											</div>
 										{% endfor %}
@@ -206,6 +206,7 @@
 					</div>
 				</div>
 			</div>
+			
 	</section>
 	<!-- Modal genérico para mensajes -->
 	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
@@ -245,16 +246,11 @@
 		});
 	</script>
 	<script>
-		function toggleOptions(element) {
-			// Obtener el contenedor de opciones
-			var optionsContainer = element.parentElement.querySelector('.options-container');
-			// Alternar la visibilidad del contenedor de opciones
-			if (optionsContainer.style.display === 'none') {
-				optionsContainer.style.display = 'block';
-			} else {
-				optionsContainer.style.display = 'none';
-			}
+		function toggleOptions(element, index) {
+			var optionsContainer = element.parentNode.querySelector('.options-container');
+			optionsContainer.style.display = 'block';
 		}
 	</script>
+
 </body>
 </html>

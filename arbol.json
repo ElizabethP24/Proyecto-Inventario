@@ -285,22 +285,13 @@
                     "nombre": "Administradores",
                     "datos": [
                         {
-                            "docadmin": 1,
-                            "nombreadmin": "eliza",
-                            "telefonoadmin": "3190000000",
-                            "correoadmin": "eliza@gmail.com",
-                            "usuarioadmin": "eliza",
-                            "contrasenaadmin": "123456789",
-                            "avataradmin": "avatar1.png"
-                        },
-                        {
                             "docadmin": 1053878000,
-                            "nombreadmin": "Carlos Benitez",
+                            "nombreadmin": "Carlos Benitez Quintero",
                             "telefonoadmin": "3197342000",
                             "correoadmin": "carlos@gmail.com",
                             "usuarioadmin": "carlos",
                             "contrasenaadmin": "123456789",
-                            "avataradmin": "avatar5.png"
+                            "avataradmin": "avatar2.png"
                         }
                     ],
                     "hijos": []

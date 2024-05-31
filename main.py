@@ -801,6 +801,7 @@ def obtener_datos_por_categoria(tabla, categoria_columna):
         datos.append(row_dict)
     return datos
 
+#
 def construir_arbol():
     raiz = Nodo("Inventario Huella de Amor")
 
@@ -883,6 +884,57 @@ if resultado_busqueda:
     print(f"Resultados encontrados: {resultado_busqueda.datos}")
 else:
     print("No se encontraron resultados.")
+    
+    # Función para eliminar un administrador de la base de datos
+
+
+@app.route('/actualizar_administrador/<docadmin>', methods=['POST'])
+def actualizar_administrador(docadmin):
+    datos = (
+        request.form['DNIAdmin'],
+        request.form['NameAdmin'],
+        request.form['phoneAdmin'],
+        request.form['emailAdmin'],
+        request.form['UserNameAdmin'],
+        request.form['passwordAdmin'],
+        request.form['avatarAdmin']
+    )
+    actualizar_administrador_en_bd(docadmin, datos)
+    return redirect(url_for('admin'))
+
+
+
+@app.route('/editar_administrador/<docadmin>')
+def editar_administrador(docadmin):
+    administrador = obtener_administrador_por_docadmin(docadmin)
+    return render_template('editar_admin.html', administrador=administrador)
+
+@app.route('/eliminar_administrador/<docadmin>')
+def eliminar_administrador(docadmin):
+    eliminar_administrador_de_bd(docadmin)
+    return redirect(url_for('admin'))
+
+def obtener_administrador_por_docadmin(docadmin):
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT docadmin, nombreadmin, telefonoadmin, correoadmin, usuarioadmin, avataradmin FROM administradores WHERE docadmin = %s"
+    cursor.execute(query, (docadmin,))
+    administrador = cursor.fetchone()
+    cursor.close()
+    return administrador
+
+def eliminar_administrador_de_bd(docadmin):
+    cursor = conexion.cursor()
+    query = "DELETE FROM administradores WHERE docadmin = %s"
+    cursor.execute(query, (docadmin,))
+    conexion.commit()
+    cursor.close()
+
+def actualizar_administrador_en_bd(docadmin, datos):
+    cursor = conexion.cursor()
+    query = "UPDATE administradores SET docadmin = %s, nombreadmin = %s, telefonoadmin = %s, correoadmin = %s, usuarioadmin = %s, contrasenaadmin = %s, avataradmin = %s WHERE docadmin = %s"
+    cursor.execute(query, datos + (docadmin,))
+    conexion.commit()
+    cursor.close()
 
 if __name__ == '__main__':
     # Ejecutar la aplicación Flask

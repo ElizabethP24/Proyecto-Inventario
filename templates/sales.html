@@ -143,7 +143,8 @@
 							<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
 								<thead>
 									<tr>
-										<th class="mdl-data-table__cell--non-numeric">Fecha</th>
+										<th class="mdl-data-table__cell--non-numeric">Id Venta</th>
+										<th>Fecha</th>
 										<th>Código Producto</th>
 										<th>Nombre Producto</th>
 										<th>Unidades</th>
@@ -157,30 +158,35 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for venta in ventas %}
-									<tr>
-										<td class="mdl-data-table__cell--non-numeric">{{ venta[0] }}</td>
-										<td>{{ venta[1] }}</td>
-										<td>{{ venta[2] }}</td>
-										<td>{{ venta[3] }}</td>
-										<td>{{ venta[4] }}</td>
-										<td>{{ venta[6] }}</td>
-										<td>{{ venta[7] }}</td>
-										<td>{{ venta[8] }}</td>
-										<td>{{ venta[5] }}</td>
-										<td>{{ venta[9] }}</td>
-										<td>
-											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-												<i class="zmdi zmdi-more"></i>
-											</a>
-											<!-- Contenedor para las opciones de editar y eliminar -->
-											<div class="options-container" style="display: none;">
-												<a href="#!">Editar</a>
-												<a href="#!">Eliminar</a>
-											</div>
-										</td>
-									</tr>
-									{% endfor %}
+									{% if ventas %}
+										{% for venta in ventas %}
+											<tr>
+												<td class="mdl-data-table__cell--non-numeric">{{ loop.index }}. {{ venta[0] }}</td>
+												<td>{{ venta[1] }}</td>
+												<td>{{ venta[2] }}</td>
+												<td>{{ venta[3] }}</td>
+												<td>{{ venta[4] }}</td>
+												<td>{{ venta[5] }}</td>
+												<td>{{ venta[6] }}</td>
+												<td>{{ venta[7] }}</td>
+												<td>{{ venta[8] }}</td>
+												<td>{{ venta[9] }}</td>
+												<td>{{ venta[10] }}</td>
+												<td>
+													<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+														<i class="zmdi zmdi-more"></i>
+													</a>
+													<!-- Contenedor para las opciones de editar y eliminar -->
+													<div class="options-container" style="display: none;">
+														<a href="{{ url_for('editar_venta', idventa=venta[0]) }}">Editar</a>
+														<a href="{{ url_for('eliminar_venta', idventa=venta[0]) }}">Eliminar</a>
+													</div>
+												</td>
+											</tr>
+										{% endfor %}
+									{% else %}
+										<p>No hay ventas disponibles.</p>
+									{% endif %}
 								</tbody>
 							</table>
 						</div>
@@ -189,15 +195,9 @@
 			</div>
 	</section>
 	<script>
-		function toggleOptions(element) {
-			// Obtener el contenedor de opciones
-			var optionsContainer = element.parentElement.querySelector('.options-container');
-			// Alternar la visibilidad del contenedor de opciones
-			if (optionsContainer.style.display === 'none') {
-				optionsContainer.style.display = 'block';
-			} else {
-				optionsContainer.style.display = 'none';
-			}
+		function toggleOptions(element, index) {
+			var optionsContainer = element.parentNode.querySelector('.options-container');
+			optionsContainer.style.display = 'block';
 		}
 	</script>
 	<!-- Modal genérico para mensajes -->

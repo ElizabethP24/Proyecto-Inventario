@@ -193,11 +193,11 @@
 											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
 												<i class="zmdi zmdi-more"></i>
 											</a>
-											<!-- Contenedor para las opciones de editar y eliminar -->
 											<div class="options-container" style="display: none;">
-												<a href="#!">Editar</a>
-												<a href="#!">Eliminar</a>
-											</div>
+												<a href="{{ url_for('editar_producto', idproducto=producto[0]) }}">Editar</a>
+												<a href="{{ url_for('eliminar_producto', idproducto=producto[0]) }}">Eliminar</a>
+											</div>	<!-- Contenedor para las opciones de editar y eliminar -->
+											
 										</div>
 									</div>
 								{% endfor %}
@@ -263,60 +263,10 @@
 		});
 	</script>
 	<script>
-		function toggleOptions(element) {
-			// Obtener el contenedor de opciones
-			var optionsContainer = element.parentElement.querySelector('.options-container');
-			// Alternar la visibilidad del contenedor de opciones
-			if (optionsContainer.style.display === 'none') {
-				optionsContainer.style.display = 'block';
-			} else {
-				optionsContainer.style.display = 'none';
-			}
+		function toggleOptions(element, index) {
+			var optionsContainer = element.parentNode.querySelector('.options-container');
+			optionsContainer.style.display = 'block';
 		}
 	</script>
-	<script>
-		// Función para buscar productos
-		function searchProduct() {
-			var searchTerm = document.getElementById('searchProduct').value;
-			// Realizar una solicitud al servidor con el término de búsqueda
-			fetch(`/search_product/${searchTerm}`)
-				.then(response => response.json())
-				.then(data => {
-					// Actualizar la lista de productos en la página con los resultados
-					updateProductList(data);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-		}
-	
-		// Función para filtrar productos por categoría
-		function filterByCategory(category) {
-			// Realizar una solicitud al servidor con el nombre de la categoría
-			fetch(`/filter_by_category/${category}`)
-				.then(response => response.json())
-				.then(data => {
-					// Actualizar la lista de productos en la página con los resultados
-					updateProductList(data);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-		}
-	
-		// Función para actualizar la lista de productos en la página
-		function updateProductList(products) {
-			var productList = document.getElementById('productList');
-			// Limpiar la lista de productos actual
-			productList.innerHTML = '';
-			// Agregar los nuevos productos a la lista
-			products.forEach(product => {
-				var productItem = document.createElement('div');
-				productItem.textContent = product.name; // Suponiendo que 'name' es el nombre del producto
-				productList.appendChild(productItem);
-			});
-		}
-	</script>
-	
-</body>
+	</body>
 </html>

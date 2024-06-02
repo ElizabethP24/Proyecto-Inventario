@@ -108,24 +108,25 @@
 								<div class="mdl-list">
 									{% if categorias %}
 										{% for categoria in categorias %}
-										<div class="mdl-list__item mdl-list__item--two-line">
-											<span class="mdl-list__item-primary-content">
-												<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-												<span>{{ loop.index }}. {{ categoria[0] }}</span>
-												<span class="mdl-list__item-sub-title">Descripción: {{ categoria[1] }}</span>
-											</span>
-											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-												<i class="zmdi zmdi-more"></i>
-											</a>
-											<!-- Contenedor para las opciones de editar y eliminar -->
-											<div class="options-container" style="display: none;">
-												<a href="#!">Editar</a>
-												<a href="#!">Eliminar</a>
+											<div class="mdl-list__item mdl-list__item--two-line">
+												<span class="mdl-list__item-primary-content">
+													<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
+													<span>{{ loop.index }}. {{ categoria[0] }}</span>
+													<span class="mdl-list__item-sub-title">Nombre: {{ categoria[1] }}</span>
+													<span class="mdl-list__item-sub-title">Descripción: {{ categoria[2] }}</span>
+												</span>
+												<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+													<i class="zmdi zmdi-more"></i>
+												</a>
+												<!-- Contenedor para las opciones de editar y eliminar -->
+												<div class="options-container" style="display: none;">
+													<a href="{{ url_for('editar_categoria', idcategoria=categoria[0]) }}">Editar</a>
+													<a href="{{ url_for('eliminar_categoria', idcategoria=categoria[0]) }}">Eliminar</a>
+												</div>
 											</div>
-										</div>
 										{% endfor %}
 									{% else %}
-									<p>No hay categorías disponibles.</p>
+										<p>No hay categorías disponibles.</p>
 									{% endif %}
 								</div>
 							</div>
@@ -165,15 +166,9 @@
 		});
 	</script>
 	<script>
-		function toggleOptions(element) {
-			// Obtener el contenedor de opciones
-			var optionsContainer = element.parentElement.querySelector('.options-container');
-			// Alternar la visibilidad del contenedor de opciones
-			if (optionsContainer.style.display === 'none') {
-				optionsContainer.style.display = 'block';
-			} else {
-				optionsContainer.style.display = 'none';
-			}
+		function toggleOptions(element, index) {
+			var optionsContainer = element.parentNode.querySelector('.options-container');
+			optionsContainer.style.display = 'block';
 		}
 	</script>
 </body>

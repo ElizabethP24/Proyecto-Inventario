@@ -275,12 +275,18 @@ def obtener_producto(codigo):
         cursor.execute("SELECT nombreprod, precioprod, unidadesprod, categoria FROM productos WHERE idproductos = %s", (codigo,))
         producto = cursor.fetchone()
         cursor.close()
+        
+        # Imprimir el resultado para diagnosticar
+        print(producto)
+        
         if producto:
+            # Manejar el caso donde 'categoria' podría no estar presente
+            categoria = producto.get('categoria', 'Categoría no especificada')
             return jsonify({
                 "nombre": producto['nombreprod'],
                 "precio": producto['precioprod'],
                 "unidades": producto['unidadesprod'],
-                "categoria": producto['categoriaprod']
+                "categoria": categoria
             }), 200
         else:
             return jsonify({"error": "Producto no encontrado"}), 404
@@ -507,7 +513,7 @@ def listar_categorias():
         print("Ejecutando consulta SQL")
         # Ejecutar una consulta para obtener todos las categorias
         cursor.execute("""
-            SELECT nombrecat, descripcioncat
+            SELECT idcategorias,nombrecat, descripcioncat
             FROM categorias
         """)
 
@@ -663,7 +669,7 @@ def listar_ventas():
         print("Ejecutando consulta SQL")
         # Ejecutar una consulta para obtener todos los ventas
         cursor.execute("""
-            SELECT fecharegistro,idprod, productovent, unidadesvent, preciovent, categoria, doccliente, nombrecliente, mediopago, totalvent 
+            SELECT idventas, fecharegistro,idprod, productovent, unidadesvent, preciovent, doccliente, nombrecliente,mediopago,categoria, totalvent 
             FROM ventas
         """)
 
@@ -890,18 +896,24 @@ else:
 
 @app.route('/actualizar_administrador/<docadmin>', methods=['POST'])
 def actualizar_administrador(docadmin):
-    datos = (
-        request.form['DNIAdmin'],
-        request.form['NameAdmin'],
-        request.form['phoneAdmin'],
-        request.form['emailAdmin'],
-        request.form['UserNameAdmin'],
-        request.form['passwordAdmin'],
-        request.form['avatarAdmin']
-    )
-    actualizar_administrador_en_bd(docadmin, datos)
-    return redirect(url_for('admin'))
-
+    try:
+        datos = (
+            request.form['DNIAdmin'],
+            request.form['NameAdmin'],
+            request.form['phoneAdmin'],
+            request.form['emailAdmin'],
+            request.form['UserNameAdmin'],
+            request.form['passwordAdmin'],
+            request.form['avatarAdmin']
+        )
+        actualizar_administrador_en_bd(docadmin, datos)
+        flash("Administrador actualizado exitosamente", "success")
+        return redirect(url_for('admin'))
+    except mysql.connector.Error as error:
+        print("Error al actualizar administrador:", error)
+        conexion.rollback()
+        flash("Error al actualizar administrador: {}".format(error), "error")
+        return redirect(url_for('editar_administrador', docadmin=docadmin))
 
 
 @app.route('/editar_administrador/<docadmin>')
@@ -911,8 +923,15 @@ def editar_administrador(docadmin):
 
 @app.route('/eliminar_administrador/<docadmin>')
 def eliminar_administrador(docadmin):
-    eliminar_administrador_de_bd(docadmin)
-    return redirect(url_for('admin'))
+    try:
+        eliminar_administrador_de_bd(docadmin)
+        flash("Administrador eliminado exitosamente", "success")
+        return redirect(url_for('admin'))
+    except mysql.connector.Error as error:
+        print("Error al eliminar administrador:", error)
+        conexion.rollback()
+        flash("Error al eliminar administrador: {}".format(error), "error")
+        return redirect(url_for('admin'))
 
 def obtener_administrador_por_docadmin(docadmin):
     cursor = conexion.cursor(dictionary=True)
@@ -936,6 +955,331 @@ def actualizar_administrador_en_bd(docadmin, datos):
     conexion.commit()
     cursor.close()
 
+@app.route('/actualizar_proveedor/<string:docproveedor>', methods=['POST'])
+def actualizar_proveedor(docproveedor):
+    try:
+        datos = (
+            request.form['DNIProvider'],
+            request.form['NameProvider'],
+            request.form['addressProvider'],
+            request.form['phoneProvider'],
+            request.form['emailProvider'],
+            request.form['webProvider']
+        )
+        actualizar_proveedor_en_bd(docproveedor, datos)
+        flash("Proveedor actualizado exitosamente", "success")
+        return redirect(url_for('providers'))
+    except mysql.connector.Error as error:
+        print("Error al actualizar proveedor:", error)
+        conexion.rollback()
+        flash("Error al actualizar proveedor: {}".format(error), "error")
+        return redirect(url_for('editar_proveedor', docproveedor=docproveedor))
+
+
+@app.route('/editar_proveedor/<docproveedor>')
+def editar_proveedor(docproveedor):
+    proveedor = obtener_proveedor_por_docproveedor(docproveedor)
+    return render_template('editar_proveedor.html', proveedor=proveedor)
+
+
+@app.route('/eliminar_proveedor/<docproveedor>')
+def eliminar_proveedor(docproveedor):
+    try:
+        eliminar_proveedor_de_bd(docproveedor)
+        flash("Proveedor eliminado exitosamente", "success")
+        return redirect(url_for('providers'))
+    except mysql.connector.Error as error:
+        print("Error al eliminar proveedor:", error)
+        conexion.rollback()
+        flash("Error al eliminar proveedor: {}".format(error), "error")
+        return redirect(url_for('providers'))
+
+
+def obtener_proveedor_por_docproveedor(docproveedor):
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT docproveedores, nombreprov, direccionprov, telefonoprov, correoprov, categoria FROM proveedores WHERE docproveedores = %s"
+    cursor.execute(query, (docproveedor,))
+    proveedor = cursor.fetchone()
+    cursor.close()
+    return proveedor
+
+
+def eliminar_proveedor_de_bd(docproveedor):
+    cursor = conexion.cursor()
+    query = "DELETE FROM proveedores WHERE docproveedores = %s"
+    cursor.execute(query, (docproveedor,))
+    conexion.commit()
+    cursor.close()
+
+
+def actualizar_proveedor_en_bd(docproveedor, datos):
+    cursor = conexion.cursor()
+    query = "UPDATE proveedores SET docproveedores = %s, nombreprov = %s, direccionprov = %s, telefonoprov = %s, correoprov = %s, categoria = %s WHERE docproveedores = %s"
+    cursor.execute(query, datos + (docproveedor,))
+    conexion.commit()
+    cursor.close()
+    
+@app.route('/actualizar_categoria/<int:idcategoria>', methods=['POST'])
+def actualizar_categoria(idcategoria):
+    try:
+        datos = (
+            request.form['NameCategory'],
+            request.form['descriptionCategory'],
+            idcategoria
+        )
+        actualizar_categoria_en_bd(datos)
+        flash("Categoría actualizada exitosamente", "success")
+        return redirect(url_for('categories'))
+    except mysql.connector.Error as error:
+        print("Error al actualizar categoría:", error)
+        conexion.rollback()
+        flash("Error al actualizar categoría: {}".format(error), "error")
+        return redirect(url_for('editar_categoria', idcategoria=idcategoria))
+
+
+@app.route('/editar_categoria/<int:idcategoria>')
+def editar_categoria(idcategoria):
+    categoria = obtener_categoria_por_id(idcategoria)
+    return render_template('editar_categoria.html', categoria=categoria)
+
+
+@app.route('/eliminar_categoria/<int:idcategoria>')
+def eliminar_categoria(idcategoria):
+    try:
+        eliminar_categoria_de_bd(idcategoria)
+        flash("Categoría eliminada exitosamente", "success")
+        return redirect(url_for('categories'))
+    except mysql.connector.Error as error:
+        print("Error al eliminar categoría:", error)
+        conexion.rollback()
+        flash("Error al eliminar categoría: {}".format(error), "error")
+        return redirect(url_for('categories'))
+    
+def obtener_categoria_por_id(idcategoria):
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT idcategorias, nombrecat, descripcioncat FROM categorias WHERE idcategorias = %s"
+    cursor.execute(query, (idcategoria,))
+    categoria = cursor.fetchone()
+    cursor.close()
+    return categoria
+
+
+def eliminar_categoria_de_bd(idcategoria):
+    cursor = conexion.cursor()
+    query = "DELETE FROM categorias WHERE idcategorias = %s"
+    cursor.execute(query, (idcategoria,))
+    conexion.commit()
+    cursor.close()
+
+
+def actualizar_categoria_en_bd(datos):
+    cursor = conexion.cursor()
+    query = "UPDATE categorias SET nombrecat = %s, descripcioncat = %s WHERE idcategorias = %s"
+    cursor.execute(query, datos)
+    conexion.commit()
+    cursor.close()
+    
+@app.route('/actualizar_cliente/<int:idcliente>', methods=['POST'])
+def actualizar_cliente(idcliente):
+    try:
+        datos = (
+            request.form['DNIClient'],
+            request.form['NameClient'],
+            request.form['addressClient'],
+            request.form['phoneClient'],
+            request.form['emailClient'],
+            idcliente
+        )
+        actualizar_cliente_en_bd(datos)
+        flash("Cliente actualizado exitosamente", "success")
+        return redirect(url_for('client'))
+    except mysql.connector.Error as error:
+        print("Error al actualizar cliente:", error)
+        conexion.rollback()
+        flash("Error al actualizar cliente: {}".format(error), "error")
+        return redirect(url_for('editar_clientes', idcliente=idcliente))
+
+
+@app.route('/editar_cliente/<int:idcliente>')
+def editar_cliente(idcliente):
+    cliente = obtener_cliente_por_id(idcliente)
+    return render_template('editar_clientes.html', cliente=cliente)
+
+
+@app.route('/eliminar_cliente/<int:idcliente>')
+def eliminar_cliente(idcliente):
+    try:
+        eliminar_cliente_de_bd(idcliente)
+        flash("Cliente eliminado exitosamente", "success")
+        return redirect(url_for('client'))
+    except mysql.connector.Error as error:
+        print("Error al eliminar cliente:", error)
+        conexion.rollback()
+        flash("Error al eliminar cliente: {}".format(error), "error")
+        return redirect(url_for('client'))
+
+
+def obtener_cliente_por_id(idcliente):
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT doccliente, nombrecliente, direccioncliente, telefonocliente, correocliente FROM clientes WHERE doccliente = %s"
+    cursor.execute(query, (idcliente,))
+    cliente = cursor.fetchone()
+    cursor.close()
+    return cliente
+
+
+def eliminar_cliente_de_bd(doccliente):
+    cursor = conexion.cursor()
+    query = "DELETE FROM clientes WHERE doccliente = %s"
+    cursor.execute(query, (doccliente,))
+    conexion.commit()
+    cursor.close()
+
+
+def actualizar_cliente_en_bd(datos):
+    cursor = conexion.cursor()
+    query = "UPDATE clientes SET doccliente = %s, nombrecliente = %s, direccioncliente = %s, telefonocliente = %s, correocliente = %s WHERE doccliente = %s"
+    cursor.execute(query, datos)
+    conexion.commit()
+    cursor.close()
+    
+@app.route('/actualizar_producto/<int:idproducto>', methods=['POST'])
+def actualizar_producto(idproducto):
+    try:
+        datos = (
+            request.form['NameProduct'],
+            request.form['StockProduct'],
+            request.form['PriceProduct'],
+            request.form['CategoryProduct'],
+            request.form['provider_id'],
+            request.form['DescriptionProduct'],
+            request.form['markProduct'],
+            request.form['dateProduct'],
+            request.form['statusProduct'],
+            request.form['fileProduct'],
+            idproducto
+        )
+        actualizar_producto_en_bd(datos)
+        flash("Producto actualizado exitosamente", "success")
+        return redirect(url_for('products'))
+    except mysql.connector.Error as error:
+        print("Error al actualizar producto:", error)
+        conexion.rollback()
+        flash("Error al actualizar producto: {}".format(error), "error")
+        return redirect(url_for('editar_producto', idproducto=idproducto))
+
+
+@app.route('/editar_producto/<int:idproducto>')
+def editar_producto(idproducto):
+    producto = obtener_producto_por_id(idproducto)
+    return render_template('editar_producto.html', producto=producto)
+
+
+@app.route('/eliminar_producto/<int:idproducto>')
+def eliminar_producto(idproducto):
+    try:
+        eliminar_producto_de_bd(idproducto)
+        flash("Producto eliminado exitosamente", "success")
+        return redirect(url_for('products'))
+    except mysql.connector.Error as error:
+        print("Error al eliminar producto:", error)
+        conexion.rollback()
+        flash("Error al eliminar producto: {}".format(error), "error")
+        return redirect(url_for('products'))
+
+
+def obtener_producto_por_id(idproducto):
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT idproductos, nombreprod, unidadesprod, precioprod, categoria, proveedorprod, descripcionprod, marcaprod, imagenprod FROM productos WHERE idproductos = %s"
+    cursor.execute(query, (idproducto,))
+    producto = cursor.fetchone()
+    cursor.close()
+    return producto
+
+
+def eliminar_producto_de_bd(idproducto):
+    cursor = conexion.cursor()
+    query = "DELETE FROM productos WHERE idproductos = %s"
+    cursor.execute(query, (idproducto,))
+    conexion.commit()
+    cursor.close()
+
+
+def actualizar_producto_en_bd(datos):
+    cursor = conexion.cursor()
+    query = "UPDATE productos SET nombreprod = %s, unidadesprod = %s, precioprod = %s, categoria = %s, proveedorprod = %s, descripcionprod = %s, marcaprod = %s, fecharegistro = %s, estatusprod = %s, imagenprod = %s WHERE idproductos = %s"
+    cursor.execute(query, datos)
+    conexion.commit()
+    cursor.close()
+    
+@app.route('/actualizar_venta/<int:idventa>', methods=['POST'])
+def actualizar_venta(idventa):
+    try:
+        datos = (
+            request.form['dateSales'],
+            request.form['NameProduct'],
+            request.form['StockProduct'],
+            request.form['PriceProduct'],
+            request.form['DNIClient'],
+            request.form['NameClient'],
+            request.form['Pay'],
+            request.form['TotalPay'],
+            request.form['CodeProduct'],
+            idventa
+        )
+        actualizar_venta_en_bd(datos)
+        flash("Venta actualizada exitosamente", "success")
+        return redirect(url_for('sales'))
+    except mysql.connector.Error as error:
+        print("Error al actualizar venta:", error)
+        conexion.rollback()
+        flash("Error al actualizar venta: {}".format(error), "error")
+        return redirect(url_for('editar_venta', idventa=idventa))
+
+
+@app.route('/editar_venta/<int:idventa>')
+def editar_venta(idventa):
+    venta = obtener_venta_por_id(idventa)
+    return render_template('editar_venta.html', venta=venta)
+
+
+@app.route('/eliminar_venta/<int:idventa>')
+def eliminar_venta(idventa):
+    try:
+        eliminar_venta_de_bd(idventa)
+        flash("Venta eliminada exitosamente", "success")
+        return redirect(url_for('sales'))
+    except mysql.connector.Error as error:
+        print("Error al eliminar venta:", error)
+        conexion.rollback()
+        flash("Error al eliminar venta: {}".format(error), "error")
+        return redirect(url_for('sales'))
+
+
+def obtener_venta_por_id(idventa):
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT idventas, fecharegistro, productovent, unidadesvent, preciovent, doccliente, nombrecliente, mediopago, totalvent, categoria, idprod FROM ventas WHERE idventas = %s"
+    cursor.execute(query, (idventa,))
+    venta = cursor.fetchone()
+    cursor.close()
+    return venta
+
+
+def eliminar_venta_de_bd(idventa):
+    cursor = conexion.cursor()
+    query = "DELETE FROM ventas WHERE idventas = %s"
+    cursor.execute(query, (idventa,))
+    conexion.commit()
+    cursor.close()
+
+
+def actualizar_venta_en_bd(datos):
+    cursor = conexion.cursor()
+    query = "UPDATE ventas SET fecharegistro = %s, productovent = %s, unidadesvent = %s, preciovent = %s, doccliente = %s, nombrecliente = %s, mediopago = %s, totalvent = %s, idprod = %s WHERE idventas = %s"
+    cursor.execute(query, datos)
+    conexion.commit()
+    cursor.close()
+    
 if __name__ == '__main__':
     # Ejecutar la aplicación Flask
     app.run(debug=True)

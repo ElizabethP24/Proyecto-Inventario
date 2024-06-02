@@ -73,9 +73,9 @@
 										</a>
 										<!-- Contenedor para las opciones de editar y eliminar -->
 										<div class="options-container" style="display: none;">
-											<a href="#!">Editar</a>
-											<a href="#!">Eliminar</a>
-										</div>
+											<a href="{{ url_for('editar_producto', idproducto=producto[0]) }}">Editar</a>
+											<a href="{{ url_for('eliminar_producto', idproducto=producto[0]) }}">Eliminar</a>
+										</div>	
 									</td>
 								</tr>
 								{% endfor %}
@@ -93,15 +93,9 @@
 		</div>
 	</section>
 	<script>
-		function toggleOptions(element) {
-			// Obtener el contenedor de opciones
-			var optionsContainer = element.parentElement.querySelector('.options-container');
-			// Alternar la visibilidad del contenedor de opciones
-			if (optionsContainer.style.display === 'none') {
-				optionsContainer.style.display = 'block';
-			} else {
-				optionsContainer.style.display = 'none';
-			}
+		function toggleOptions(element, index) {
+			var optionsContainer = element.parentNode.querySelector('.options-container');
+			optionsContainer.style.display = 'block';
 		}
 	</script>
 </body>

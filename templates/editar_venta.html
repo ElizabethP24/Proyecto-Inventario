@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% include 'base.html' %}
+</head>
+<body>
+    <!-- pageContent -->
+    <section class="full-width pageContent">
+        <!-- navBar -->
+        <div class="full-width navBar">
+            <div class="full-width navBar-options">
+                <i class="zmdi zmdi-swap btn-menu" id="btn-menu"></i>    
+                <div class="mdl-tooltip" for="btn-menu">Ocultar / Mostrar MENU</div>
+                <nav class="navBar-options-list">
+                    <ul class="list-unstyle">
+                        <li class="btn-Notification" id="notifications">
+                            <i class="zmdi zmdi-notifications"></i>
+                            <div class="mdl-tooltip" for="notifications">Notificaciones</div>
+                        </li>
+                        <li class="btn-exit" id="btn-exit">
+                            <i class="zmdi zmdi-power"></i>
+                            <div class="mdl-tooltip" for="btn-exit">Cerrar Sesión</div>
+                        </li>
+                        <li class="text-condensedLight noLink" ><small>Usuario</small></li>
+                        <li class="noLink">
+                            <figure>
+                                <img src="/static/assets/img/avatar1.png" alt="Avatar" class="img-responsive">
+                            </figure>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- pageContent -->
+        <section class="full-width header-well">
+            <div class="full-width header-well-icon">
+                <i class="zmdi zmdi-label"></i>
+            </div>
+            <div class="full-width header-well-text">
+                <p class="text-condensedLight">
+                    Ingrese los datos solicitados para editar una venta
+                </p>
+            </div>
+        </section>
+        <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+            <div class="mdl-tabs__tab-bar">
+                <a href="#tabEditCategory" class="mdl-tabs__tab is-active">EDITAR VENTA</a>
+            </div>
+            <div class="mdl-tabs__panel is-active" id="tabEditCategory">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--12-col">
+                        <div class="full-width panel mdl-shadow--2dp">
+                            <div class="full-width panel-tittle bg-primary text-center tittles">
+                                Editar Venta
+                            </div>
+                            <div class="full-width panel-content" id="tab-editar-categoria">
+                                <form action="{{ url_for('actualizar_venta', idventa=venta.idventas) }}" method="POST">
+									<div class="mdl-grid">
+										<div class="mdl-cell mdl-cell--12-col">
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; INFORMACIÓN DEL PRODUCTO</legend><br>
+									    </div>
+										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9- ]*(\.[0-9]+)?" id="BarCode" name="CodeProduct"  value="{{ venta.idprod }}">
+												<label class="mdl-textfield__label" for="BarCode">Código</label>
+												<span class="mdl-textfield__error">Código Inválido</span>
+											</div>
+										</div>
+										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield">
+												<input type="date" class="mdl-textfield__input" name="dateSales"  value="{{ venta.fecharegistro }}">
+											</div>
+										</div>
+										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct" name="NameProduct"  value="{{ venta.productovent}}">
+												<label class="mdl-textfield__label" for="NameProduct">Producto</label>
+												<span class="mdl-textfield__error">Producto Inválido</span>
+											</div>
+										</div>
+										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StrockProduct" name="StockProduct"  value="{{ venta.unidadesvent }}">
+												<label class="mdl-textfield__label" for="StrockProduct">Unidades</label>
+												<span class="mdl-textfield__error">Unidades Inválidas</span>
+											</div>
+										</div>
+										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct" name="PriceProduct"  value="{{ venta.preciovent}}">
+												<label class="mdl-textfield__label" for="PriceProduct">Precio</label>
+												<span class="mdl-textfield__error">Precio Inválido</span>
+											</div>
+										</div>
+                                    	<div class="mdl-cell mdl-cell--12-col">
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Cliente</legend><br>
+									    </div>
+                                        <div class="mdl-cell mdl-cell--12-col">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIClient" name="DNIClient"  value="{{ venta.doccliente }}">
+												<label class="mdl-textfield__label" for="DNIClient">Documento</label>
+												<span class="mdl-textfield__error">Documento Inválido</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameClient" name="NameClient"  value="{{ venta.nombrecliente }}">
+												<label class="mdl-textfield__label" for="NameClient">Nombre</label>
+												<span class="mdl-textfield__error">Nombre Inválido</span>
+											</div>
+									    </div>
+										<select class="mdl-textfield__input" name="Pay"  value="{{ venta.mediopago }}">
+											<option value="" disabled="" selected="">Seleccionar Medio de Pago</option>
+											<option value="Efectivo">Efectivo</option>
+											<option value="Crédito">Crédito</option>
+											<option value="Transferencia">Transferencia</option>
+											<option value="QR">QR</option>
+										</select>
+										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" id="TotalPay" name="TotalPay"  value="{{ venta.totalvent }}" readonly>
+												<label class="mdl-textfield__label" for="TotalPay">Total a pagar</label>
+											</div>
+										</div>
+									</div>
+									<p class="text-center">
+										<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored bg-primary" id="btn-addProduct">
+											<i class="zmdi zmdi-plus"></i>
+										</button>
+										<div class="mdl-tooltip" for="btn-addProduct">GUARDAR VENTA</div>
+									</p>
+								</form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal genérico para mensajes -->
+        <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMessageContent"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Mostrar el modal con el mensaje correspondiente
+        $(document).ready(function() {
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            $('#messageModal').modal('show');
+            $('#messageModalLabel').text("{{ category | capitalize }}");
+            $('#modalMessageContent').text("{{ message }}");
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        });
+    </script>
+    <script>
+        document.getElementById('btn-addCategory').addEventListener('click', function() {
+            var selectedAvatar = document.querySelector('input[name="options"]:checked').value;
+            document.getElementById('avatarSelection').value = selectedAvatar;
+        });
+    </script>
+    
+</body>
+</html>

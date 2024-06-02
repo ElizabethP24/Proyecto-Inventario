@@ -136,7 +136,7 @@
 								<div class="mdl-list">
 									{% if proveedores %}
 										{% for proveedor in proveedores %}
-										<div class="mdl-list__item mdl-list__item--two-line">
+											<div class="mdl-list__item mdl-list__item--two-line">
 											<span class="mdl-list__item-primary-content">
 												<i class="zmdi zmdi-truck mdl-list__item-avatar"></i>
 												<span>{{ loop.index }}. {{ proveedor[1] }}</span>
@@ -150,14 +150,14 @@
 											</a>
 											<!-- Contenedor para las opciones de editar y eliminar -->
 											<div class="options-container" style="display: none;">
-												<a href="#!">Editar</a>
-												<a href="#!">Eliminar</a>
+												<a href="{{ url_for('editar_proveedor', docproveedor=proveedor[0]) }}">Editar</a>
+												<a href="{{ url_for('eliminar_proveedor', docproveedor=proveedor[0]) }}">Eliminar</a>
 											</div>
-										</div>
+											</div>
 										{% endfor %}
-									{% else %}
-									<p>No hay proveedores disponibles.</p>
-									{% endif %}
+										{% else %}
+										<p>No hay proveedores disponibles.</p>
+										{% endif %}
 								</div>
 							</div>
 						</div>
@@ -165,18 +165,12 @@
 				</div>
 			</div>
 		
-	<script>
-			function toggleOptions(element) {
-				// Obtener el contenedor de opciones
-				var optionsContainer = element.parentElement.querySelector('.options-container');
-				// Alternar la visibilidad del contenedor de opciones
-				if (optionsContainer.style.display === 'none') {
+			<script>
+				function toggleOptions(element, index) {
+					var optionsContainer = element.parentNode.querySelector('.options-container');
 					optionsContainer.style.display = 'block';
-				} else {
-					optionsContainer.style.display = 'none';
 				}
-			}
-	</script>
+			</script>
 			<!-- Modal genérico para mensajes -->
 			<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true" style="display:none">
 				<div class="modal-dialog" role="document">

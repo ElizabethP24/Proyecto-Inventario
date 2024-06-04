@@ -128,43 +128,34 @@
 											<i class="zmdi zmdi-search"></i>
 										</label>
 										<div class="mdl-textfield__expandable-holder">
-											<input class="mdl-textfield__input" type="text" id="searchProvider">
-											<label class="mdl-textfield__label"></label>
+											<select id="searchType" class="mdl-textfield__input">
+												<option value="documento">Documento</option>
+												<option value="nombre">Nombre</option>
+												<option value="categoria">Categoría</option>
+											</select>
+											<select id="categoria" class="mdl-textfield__input hidden">
+												<option value="">Seleccione una categoría</option>
+												<option value="ALIMENTOS">Alimentos</option>
+												<option value="ACCESORIOS">Accesorios</option>
+												<option value="JUGUETES">Juguetes</option>
+												<option value="MEDICAMENTOS">Medicamentos</option>
+											</select>
+											<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar...">
+											<button type="button" onclick="searchTree()">Buscar</button>
+											<button type="button" onclick="showAllRecords()">Ver todos los registros</button>
 										</div>
 									</div>
 								</form>
-								<div class="mdl-list">
-									{% if proveedores %}
-										{% for proveedor in proveedores %}
-											<div class="mdl-list__item mdl-list__item--two-line">
-											<span class="mdl-list__item-primary-content">
-												<i class="zmdi zmdi-truck mdl-list__item-avatar"></i>
-												<span>{{ loop.index }}. {{ proveedor[1] }}</span>
-												<span class="mdl-list__item-sub-title">CC. {{ proveedor[0] }}</span>
-												<span class="mdl-list__item-sub-title">Tel. {{ proveedor[3] }}</span>
-												<span class="mdl-list__item-sub-title">Cat. {{ proveedor[5] }}</span>
-												<span class="mdl-list__item-sub-title">Correo. {{ proveedor[4] }}</span>
-											</span>
-											<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
-												<i class="zmdi zmdi-more"></i>
-											</a>
-											<!-- Contenedor para las opciones de editar y eliminar -->
-											<div class="options-container" style="display: none;">
-												<a href="{{ url_for('editar_proveedor', docproveedor=proveedor[0]) }}">Editar</a>
-												<a href="{{ url_for('eliminar_proveedor', docproveedor=proveedor[0]) }}">Eliminar</a>
-											</div>
-											</div>
-										{% endfor %}
-										{% else %}
-										<p>No hay proveedores disponibles.</p>
-										{% endif %}
+								<div id="searchResults"></div>
+								<div class="mdl-list" id="providerList">
+									<!-- Los proveedores existentes se mostrarán aquí -->
+									<!-- Se asume que el contenido aquí será generado dinámicamente por el backend -->
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		
 			<script>
 				function toggleOptions(element, index) {
 					var optionsContainer = element.parentNode.querySelector('.options-container');
@@ -201,6 +192,92 @@
 					{% endif %}
 					{% endwith %}
 				});
+			</script>
+			<script>
+				async function fetchTreeData() {
+					try {
+						const response = await fetch('/arbol.json');
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return await response.json();
+					} catch (error) {
+						console.error('Fetch error:', error);
+						return null;
+					}
+				}
+		
+				function searchInNode(node, searchTerm) {
+					const results = [];
+					if (node.nombre === "Proveedores" || node.nombre.toLowerCase().includes("proveedores")) {
+						for (const child of node.hijos || []) {
+							if (child.datos) {
+								for (const data of child.datos) {
+									if (JSON.stringify(data).toLowerCase().includes(searchTerm.toLowerCase())) {
+										results.push(data);
+									}
+								}
+							}
+						}
+					} else {
+						for (const child of node.hijos || []) {
+							results.push(...searchInNode(child, searchTerm));
+						}
+					}
+					return results;
+				}
+		
+				async function searchTree() {
+					const searchType = document.getElementById('searchType').value;
+					const searchTerm = document.getElementById('searchInput').value.trim();
+					const treeData = await fetchTreeData();
+					if (treeData && searchTerm) {
+						const results = searchInNode(treeData, searchTerm);
+						displayResults(results, searchType);
+					} else {
+						document.getElementById('searchResults').textContent = 'No se encontraron resultados';
+					}
+				}
+		        
+				function showAllRecords() {
+					fetchTreeData().then(treeData => {
+						if (treeData) {
+							const results = searchInNode(treeData, "");
+							displayResults(results);
+						}
+					});
+				}
+		
+				function displayResults(results, searchType) {
+					const providerList = document.getElementById('providerList');
+					providerList.innerHTML = ''; // Clear previous results
+					if (results.length > 0) {
+						results.forEach(item => {
+							const itemDiv = document.createElement('div');
+							itemDiv.className = 'mdl-list__item mdl-list__item--two-line';
+							itemDiv.innerHTML = `
+								<span class="mdl-list__item-primary-content">
+									<i class="zmdi zmdi-truck mdl-list__item-avatar"></i>
+									<span>${item.nombreprov}</span>
+									<span class="mdl-list__item-sub-title">CC. ${item.docproveedores}</span>
+									<span class="mdl-list__item-sub-title">Tel. ${item.telefonoprov}</span>
+									<span class="mdl-list__item-sub-title">Cat. ${item.categoria}</span>
+									<span class="mdl-list__item-sub-title">Correo. ${item.correoprov}</span>
+								</span>
+								<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+									<i class="zmdi zmdi-more"></i>
+								</a>
+								<div class="options-container" style="display: none;">
+									<a href="/editar_proveedor/${item.docproveedores}">Editar</a>
+									<a href="/eliminar_proveedor/${item.docproveedores}">Eliminar</a>
+								</div>
+							`;
+							providerList.appendChild(itemDiv);
+						});
+					} else {
+						providerList.innerHTML = '<p>No se encontraron resultados</p>';
+					}
+				}
 			</script>
 	</body>
 </html>

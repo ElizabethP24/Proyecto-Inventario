@@ -1,6 +1,6 @@
 import mysql.connector
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify,send_from_directory
 from werkzeug.utils import secure_filename
 from PIL import Image 
 from sqlalchemy import create_engine, MetaData, Table
@@ -13,6 +13,11 @@ import json
 app = Flask(__name__, 
             static_folder='D:\\ELIZA\SISTEMAS\\INGENIERIA\\SEMESTRE II\\ESTRUCT DATOS APLICADA\\ProyectoInventario\\static', 
             static_url_path='/static')
+
+
+@app.route('/arbol.json')
+def get_arbol_json():
+    return send_from_directory('D:\\ELIZA\\SISTEMAS\\INGENIERIA\\SEMESTRE II\\ESTRUCT DATOS APLICADA\\ProyectoInventario', 'arbol.json') 
 
 # Genera una clave secreta aleatoria
 app.secret_key = os.urandom(24)

@@ -99,13 +99,21 @@
 										<label class="mdl-button mdl-js-button mdl-button--icon" for="searchCategory">
 											<i class="zmdi zmdi-search"></i>
 										</label>
-										<div class="mdl-textfield__expandable-holder">
-											<input class="mdl-textfield__input" type="text" id="searchCategory">
-											<label class="mdl-textfield__label"></label>
+											<div class="mdl-textfield__expandable-holder">
+											    <select id="searchType" class="mdl-textfield__input">
+												<div id="searchResults"></div>
+												<option value="nombre">Nombre</option>
+												</select>
+											<div class="mdl-textfield__expandable-holder">
+												<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar..." oninput="searchCategories()">
+												<button type="button" onclick="searchCategories()">Buscar</button>
+												<button type="button" onclick="showAllCategories()">Ver todos los registros</button>
+											</div>
 										</div>
-									</div>
-								</form>
-								<div class="mdl-list">
+									</form>
+								</div>
+									<div class="mdl-list" id="categoryList">
+										<!-- Las categorías existentes se mostrarán aquí -->
 									{% if categorias %}
 										{% for categoria in categorias %}
 											<div class="mdl-list__item mdl-list__item--two-line">
@@ -169,6 +177,34 @@
 		function toggleOptions(element, index) {
 			var optionsContainer = element.parentNode.querySelector('.options-container');
 			optionsContainer.style.display = 'block';
+		}
+	</script>
+	<script>
+		function searchCategories() {
+			const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+			const categoryList = document.getElementById('categoryList');
+			const categories = categoryList.getElementsByClassName('mdl-list__item'); // Obtener todas las categorías
+		  
+			for (let category of categories) {
+			  const categoryName = category.querySelector('.mdl-list__item-primary-content span').textContent.toLowerCase();
+			  const categoryDescription = category.querySelector('.mdl-list__item-sub-title').textContent.toLowerCase();
+		  
+			  if (categoryName.includes(searchInput) || categoryDescription.includes(searchInput)) {
+				category.style.display = ''; // Mostrar la categoría si coincide con el término de búsqueda
+			  } else {
+				category.style.display = 'none'; // Ocultar la categoría si no coincide con el término de búsqueda
+			  }
+			}
+		  }
+	
+		// Función para mostrar todas las categorías
+		function showAllCategories() {
+			const categoryList = document.getElementById('categoryList');
+			const categories = categoryList.getElementsByClassName('mdl-list__item'); // Obtener todas las categorías
+	
+			for (let category of categories) {
+				category.style.display = ''; // Mostrar todas las categorías
+			}
 		}
 	</script>
 </body>

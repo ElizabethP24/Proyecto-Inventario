@@ -120,13 +120,21 @@
 										<label class="mdl-button mdl-js-button mdl-button--icon" for="searchClient">
 											<i class="zmdi zmdi-search"></i>
 										</label>
-										<div class="mdl-textfield__expandable-holder">
-											<input class="mdl-textfield__input" type="text" id="searchClient">
-											<label class="mdl-textfield__label"></label>
-										</div>
+											<div class="mdl-textfield__expandable-holder">
+												<select id="searchType" class="mdl-textfield__input">
+												<div id="searchResults"></div>
+												<option value="nombre">Nombre</option>
+												<option value="nombre">Documento</option>
+												</select>
+												<div class="mdl-textfield__expandable-holder">
+													<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar..." oninput="searchClient()">
+													<button type="button" onclick="searchClient()">Buscar</button>
+													<button type="button" onclick="showAllClient()">Ver todos los registros</button>
+												</div>
+											</div>
+										</form>
 									</div>
-								</form>
-								<div class="mdl-list">
+									<div id="clientList" class="mdl-list">
 									{% if clientes %}
 										{% for cliente in clientes %}
 											<div class="mdl-list__item mdl-list__item--two-line">
@@ -194,5 +202,34 @@
 			optionsContainer.style.display = 'block';
 		}
 	</script>
+	<script>
+		function searchClient() {
+			const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+			const clientList = document.getElementById('clientList');
+			const clientes = clientList.getElementsByClassName('mdl-list__item'); // Obtener todas las categorías
+		  
+			for (let client of clientes) {
+				const clientName = client.querySelector('.mdl-list__item-primary-content span').textContent.toLowerCase();
+				const clientDocument = client.querySelector('.mdl-list__item-sub-title').textContent.toLowerCase(); // Corregir el nombre de la variable
+		  
+				if (clientName.includes(searchInput) || clientDocument.includes(searchInput)) {
+					client.style.display = ''; // Mostrar la categoría si coincide con el término de búsqueda
+				} else {
+					client.style.display = 'none'; // Ocultar la categoría si no coincide con el término de búsqueda
+				}
+			}
+		}
+	
+		// Función para mostrar todas las categorías
+		function showAllClient() {
+			const clientList = document.getElementById('clientList');
+			const clientes = clientList.getElementsByClassName('mdl-list__item'); // Obtener todas las categorías
+	
+			for (let client of clientes) {
+				client.style.display = ''; // Mostrar todas las categorías
+			}
+		}
+	</script>
+
 </body>
 </html>

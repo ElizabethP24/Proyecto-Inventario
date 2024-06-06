@@ -140,6 +140,31 @@
 					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width divider-menu-h"></div>
 						<div class="table-responsive">
+							<form action="#">
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+									<label class="mdl-button mdl-js-button mdl-button--icon" for="searchSales">
+										<i class="zmdi zmdi-search"></i>
+									</label>
+									<div class="mdl-textfield__expandable-holder">
+										<select id="searchType" class="mdl-textfield__input">
+											<option value="fecha">Fecha</option>
+											<option value="nombre">Nombre</option>
+											<option value="codigo">Código</option>
+											<option value="doccliente">Doc.Cliente</option>
+											<option value="categoria">Categoría</option>
+											<option value="mediopago">Medio de Pago</option>
+										</select>
+										<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar..." oninput="searchTree()">
+										<button type="button" onclick="searchTree()">Buscar</button>
+										<button type="button" onclick="showAllRecords()">Ver todos los registros</button>
+									</div>
+								</div>
+							</form>
+							<div id="searchResults"></div>
+							<div class="mdl-list" id="ventaList">
+								<!-- Los proveedores existentes se mostrarán aquí -->
+								<!-- Se asume que el contenido aquí será generado dinámicamente por el backend -->
+							</div>
 							<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
 								<thead>
 									<tr>
@@ -277,6 +302,97 @@
 					.catch(error => console.error('Error:', error));
 			}
 		});
+	</script>
+	<script>
+		async function fetchTreeData() {
+			try {
+				const response = await fetch('/arbol.json');
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return await response.json();
+			} catch (error) {
+				console.error('Fetch error:', error);
+				return null;
+			}
+		}
+
+		function searchInNode(node, searchTerm) {
+			const results = [];
+			if (node.nombre === "Ventas" || node.nombre.toLowerCase().includes("ventas")) {
+				for (const child of node.hijos || []) {
+					if (child.datos) {
+						for (const data of child.datos) {
+							if (JSON.stringify(data).toLowerCase().includes(searchTerm.toLowerCase())) {
+								results.push(data);
+							}
+						}
+					}
+				}
+			} else {
+				for (const child of node.hijos || []) {
+					results.push(...searchInNode(child, searchTerm));
+				}
+			}
+			return results;
+		}
+
+		async function searchTree() {
+			const searchType = document.getElementById('searchType').value;
+			const searchTerm = document.getElementById('searchInput').value.trim();
+			const treeData = await fetchTreeData();
+			if (treeData && searchTerm) {
+				const results = searchInNode(treeData, searchTerm);
+				displayResults(results, searchType);
+			} else {
+				
+			}
+		}
+		
+		function showAllRecords() {
+			fetchTreeData().then(treeData => {
+				if (treeData) {
+					const results = searchInNode(treeData, "");
+					displayResults(results);
+				}
+			});
+		}
+
+		function displayResults(results, searchType) {
+			const ventaList = document.getElementById('ventaList');
+			ventaList.innerHTML = ''; // Clear previous results
+			if (results.length > 0) {
+				results.forEach(item => {
+					const itemDiv = document.createElement('div');
+					itemDiv.className = 'mdl-list__item mdl-list__item--two-line';
+					itemDiv.innerHTML = `
+						<span class="mdl-list__item-primary-content">
+							<i class="zmdi zmdi-truck mdl-list__item-avatar"></i>
+							<span>${item.idventas}</span>
+							<span class="mdl-list__item-sub-title">CC. ${item.fecharegistro}</span>
+							<span class="mdl-list__item-sub-title">Tel. ${item.idprod}</span>
+							<span class="mdl-list__item-sub-title">Cat. ${item.productovent}</span>
+							<span class="mdl-list__item-sub-title">Correo. ${item.unidadesvent}</span>
+							<span class="mdl-list__item-sub-title">Cat. ${item.preciovent}</span>
+							<span class="mdl-list__item-sub-title">Correo. ${item.doccliente}</span>
+							<span class="mdl-list__item-sub-title">Correo. ${item.nombrecliente}</span>
+							<span class="mdl-list__item-sub-title">Correo. ${item.mediopago}</span>
+							<span class="mdl-list__item-sub-title">Correo. ${item.categoria}</span>
+						</span>
+						<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+							<i class="zmdi zmdi-more"></i>
+						</a>
+						<div class="options-container" style="display: none;">
+							<a href="/editar_venta/${item.idventas}">Editar</a>
+							<a href="/eliminar_venta/${item.idventas}">Eliminar</a>
+						</div>
+					`;
+					ventaList.appendChild(itemDiv);
+				});
+			} else {
+				ventaList.innerHTML = '<p>No se encontraron resultados</p>';
+			}
+		}
 	</script>
 	
 </body>

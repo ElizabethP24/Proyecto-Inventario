@@ -254,6 +254,15 @@
                             "usuarioadmin": "eliza",
                             "contrasenaadmin": "123456789",
                             "avataradmin": "avatar5.png"
+                        },
+                        {
+                            "docadmin": 1053999999,
+                            "nombreadmin": "Esteban Castro",
+                            "telefonoadmin": "3197342117",
+                            "correoadmin": "esteban@gmail.com",
+                            "usuarioadmin": "esteban",
+                            "contrasenaadmin": "123456789",
+                            "avataradmin": "avatar2.png"
                         }
                     ],
                     "hijos": []
@@ -274,6 +283,13 @@
                             "direccioncliente": "calle 66 ",
                             "telefonocliente": "3197342114",
                             "correocliente": "jhon@gmail.com"
+                        },
+                        {
+                            "doccliente": 1053868999,
+                            "nombrecliente": "David Quiceno",
+                            "direccioncliente": "calle 66 #30-32",
+                            "telefonocliente": "3197342111",
+                            "correocliente": "david@gmail.com"
                         }
                     ],
                     "hijos": []

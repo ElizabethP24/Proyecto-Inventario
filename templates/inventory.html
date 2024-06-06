@@ -45,6 +45,29 @@
 		<div class="mdl-grid">
 			<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--12-col-desktop">
 				<div class="table-responsive">
+					<form action="#">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+							<label class="mdl-button mdl-js-button mdl-button--icon" for="searchProducts">
+								<i class="zmdi zmdi-search"></i>
+							</label>
+							<div class="mdl-textfield__expandable-holder">
+								<select id="searchType" class="mdl-textfield__input">
+									<option value="codigo">Código</option>
+									<option value="nombre">Nombre</option>
+									<option value="categoria">Categoría</option>
+									<option value="estado">Estado</option>
+								</select>
+								<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar..." oninput="searchTree()">
+								<button type="button" onclick="searchTree()">Buscar</button>
+								<button type="button" onclick="showAllRecords()">Ver todos los registros</button>
+							</div>
+						</div>
+					</form>
+					<div id="searchResults"></div>
+					<div class="mdl-list" id="productsList">
+						<!-- Los proveedores existentes se mostrarán aquí -->
+						<!-- Se asume que el contenido aquí será generado dinámicamente por el backend -->
+					</div>
 					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
 						<thead>
 							<tr>
@@ -96,6 +119,64 @@
 		function toggleOptions(element, index) {
 			var optionsContainer = element.parentNode.querySelector('.options-container');
 			optionsContainer.style.display = 'block';
+		}
+	</script>
+	<script>
+		async function fetchTreeData() {
+			console.log('fetchTreeData called');
+			
+			try {
+				const response = await fetch('/arbol.json');
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return await response.json();
+			} catch (error) {
+				console.error('Fetch error:', error);
+				return null;
+			}
+		}
+
+		function searchInNode(node, searchTerm) {
+			const results = [];
+			if (node.nombre === "Productos" || node.nombre.toLowerCase().includes("productos")) {
+				for (const child of node.hijos || []) {
+					if (child.datos) {
+						for (const data of child.datos) {
+							if (JSON.stringify(data).toLowerCase().includes(searchTerm.toLowerCase())) {
+								results.push(data);
+							}
+						}
+					}
+				}
+			} else {
+				for (const child of node.hijos || []) {
+					results.push(...searchInNode(child, searchTerm));
+				}
+			}
+			return results;
+		}
+
+		async function searchTree() {
+			console.log('searchTree called');
+			const searchType = document.getElementById('searchType').value;
+			const searchTerm = document.getElementById('searchInput').value.trim();
+			const treeData = await fetchTreeData();
+			if (treeData && searchTerm) {
+				const results = searchInNode(treeData, searchTerm);
+				displayResults(results, searchType);
+			} else {
+				productsList.innerHTML = '<p>No se encontraron resultados</p>';
+			}
+		}
+		
+		function showAllRecords() {
+			fetchTreeData().then(treeData => {
+				if (treeData) {
+					const results = searchInNode(treeData, "");
+					displayResults(results);
+				}
+			});
 		}
 	</script>
 </body>

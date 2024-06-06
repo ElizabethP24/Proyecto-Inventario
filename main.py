@@ -878,27 +878,6 @@ print(arbol_cargado)
 dot = visualizar_arbol(arbol_cargado)
 dot.render('arbol_visual', format='pdf')
 
-def buscar_en_arbol(nodo, nombre_busqueda):
-    if nodo.nombre == nombre_busqueda:
-        return nodo
-
-    for hijo in nodo.hijos:
-        resultado = buscar_en_arbol(hijo, nombre_busqueda)
-        if resultado:
-            return resultado
-
-    return None
-
-# Ejemplo de búsqueda
-resultado_busqueda = buscar_en_arbol(arbol_cargado, "Alimentos")
-if resultado_busqueda:
-    print(f"Resultados encontrados: {resultado_busqueda.datos}")
-else:
-    print("No se encontraron resultados.")
-    
-    # Función para eliminar un administrador de la base de datos
-
-
 @app.route('/actualizar_administrador/<docadmin>', methods=['POST'])
 def actualizar_administrador(docadmin):
     try:
@@ -919,7 +898,6 @@ def actualizar_administrador(docadmin):
         conexion.rollback()
         flash("Error al actualizar administrador: {}".format(error), "error")
         return redirect(url_for('editar_administrador', docadmin=docadmin))
-
 
 @app.route('/editar_administrador/<docadmin>')
 def editar_administrador(docadmin):
@@ -980,7 +958,6 @@ def actualizar_proveedor(docproveedor):
         flash("Error al actualizar proveedor: {}".format(error), "error")
         return redirect(url_for('editar_proveedor', docproveedor=docproveedor))
 
-
 @app.route('/editar_proveedor/<docproveedor>')
 def editar_proveedor(docproveedor):
     proveedor = obtener_proveedor_por_docproveedor(docproveedor)
@@ -999,7 +976,6 @@ def eliminar_proveedor(docproveedor):
         flash("Error al eliminar proveedor: {}".format(error), "error")
         return redirect(url_for('providers'))
 
-
 def obtener_proveedor_por_docproveedor(docproveedor):
     cursor = conexion.cursor(dictionary=True)
     query = "SELECT docproveedores, nombreprov, direccionprov, telefonoprov, correoprov, categoria FROM proveedores WHERE docproveedores = %s"
@@ -1008,14 +984,12 @@ def obtener_proveedor_por_docproveedor(docproveedor):
     cursor.close()
     return proveedor
 
-
 def eliminar_proveedor_de_bd(docproveedor):
     cursor = conexion.cursor()
     query = "DELETE FROM proveedores WHERE docproveedores = %s"
     cursor.execute(query, (docproveedor,))
     conexion.commit()
     cursor.close()
-
 
 def actualizar_proveedor_en_bd(docproveedor, datos):
     cursor = conexion.cursor()
@@ -1041,12 +1015,10 @@ def actualizar_categoria(idcategoria):
         flash("Error al actualizar categoría: {}".format(error), "error")
         return redirect(url_for('editar_categoria', idcategoria=idcategoria))
 
-
 @app.route('/editar_categoria/<int:idcategoria>')
 def editar_categoria(idcategoria):
     categoria = obtener_categoria_por_id(idcategoria)
     return render_template('editar_categoria.html', categoria=categoria)
-
 
 @app.route('/eliminar_categoria/<int:idcategoria>')
 def eliminar_categoria(idcategoria):
@@ -1068,14 +1040,12 @@ def obtener_categoria_por_id(idcategoria):
     cursor.close()
     return categoria
 
-
 def eliminar_categoria_de_bd(idcategoria):
     cursor = conexion.cursor()
     query = "DELETE FROM categorias WHERE idcategorias = %s"
     cursor.execute(query, (idcategoria,))
     conexion.commit()
     cursor.close()
-
 
 def actualizar_categoria_en_bd(datos):
     cursor = conexion.cursor()
@@ -1104,12 +1074,10 @@ def actualizar_cliente(idcliente):
         flash("Error al actualizar cliente: {}".format(error), "error")
         return redirect(url_for('editar_clientes', idcliente=idcliente))
 
-
 @app.route('/editar_cliente/<int:idcliente>')
 def editar_cliente(idcliente):
     cliente = obtener_cliente_por_id(idcliente)
     return render_template('editar_clientes.html', cliente=cliente)
-
 
 @app.route('/eliminar_cliente/<int:idcliente>')
 def eliminar_cliente(idcliente):
@@ -1123,7 +1091,6 @@ def eliminar_cliente(idcliente):
         flash("Error al eliminar cliente: {}".format(error), "error")
         return redirect(url_for('client'))
 
-
 def obtener_cliente_por_id(idcliente):
     cursor = conexion.cursor(dictionary=True)
     query = "SELECT doccliente, nombrecliente, direccioncliente, telefonocliente, correocliente FROM clientes WHERE doccliente = %s"
@@ -1132,14 +1099,12 @@ def obtener_cliente_por_id(idcliente):
     cursor.close()
     return cliente
 
-
 def eliminar_cliente_de_bd(doccliente):
     cursor = conexion.cursor()
     query = "DELETE FROM clientes WHERE doccliente = %s"
     cursor.execute(query, (doccliente,))
     conexion.commit()
     cursor.close()
-
 
 def actualizar_cliente_en_bd(datos):
     cursor = conexion.cursor()
@@ -1173,12 +1138,10 @@ def actualizar_producto(idproducto):
         flash("Error al actualizar producto: {}".format(error), "error")
         return redirect(url_for('editar_producto', idproducto=idproducto))
 
-
 @app.route('/editar_producto/<int:idproducto>')
 def editar_producto(idproducto):
     producto = obtener_producto_por_id(idproducto)
     return render_template('editar_producto.html', producto=producto)
-
 
 @app.route('/eliminar_producto/<int:idproducto>')
 def eliminar_producto(idproducto):
@@ -1192,7 +1155,6 @@ def eliminar_producto(idproducto):
         flash("Error al eliminar producto: {}".format(error), "error")
         return redirect(url_for('products'))
 
-
 def obtener_producto_por_id(idproducto):
     cursor = conexion.cursor(dictionary=True)
     query = "SELECT idproductos, nombreprod, unidadesprod, precioprod, categoria, proveedorprod, descripcionprod, marcaprod, imagenprod FROM productos WHERE idproductos = %s"
@@ -1201,14 +1163,12 @@ def obtener_producto_por_id(idproducto):
     cursor.close()
     return producto
 
-
 def eliminar_producto_de_bd(idproducto):
     cursor = conexion.cursor()
     query = "DELETE FROM productos WHERE idproductos = %s"
     cursor.execute(query, (idproducto,))
     conexion.commit()
     cursor.close()
-
 
 def actualizar_producto_en_bd(datos):
     cursor = conexion.cursor()

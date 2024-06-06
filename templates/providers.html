@@ -140,7 +140,8 @@
 												<option value="JUGUETES">Juguetes</option>
 												<option value="MEDICAMENTOS">Medicamentos</option>
 											</select>
-											<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar...">
+											
+											<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar..." oninput="searchTree()">
 											<button type="button" onclick="searchTree()">Buscar</button>
 											<button type="button" onclick="showAllRecords()">Ver todos los registros</button>
 										</div>
@@ -235,7 +236,7 @@
 						const results = searchInNode(treeData, searchTerm);
 						displayResults(results, searchType);
 					} else {
-						document.getElementById('searchResults').textContent = 'No se encontraron resultados';
+						
 					}
 				}
 		        

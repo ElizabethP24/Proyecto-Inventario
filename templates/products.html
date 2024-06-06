@@ -158,15 +158,26 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--12-col-desktop">
 						<form action="#">
 							<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-								<label class="mdl-button mdl-js-button mdl-button--icon" for="searchProduct">
+								<label class="mdl-button mdl-js-button mdl-button--icon" for="searchProducts">
 									<i class="zmdi zmdi-search"></i>
 								</label>
 								<div class="mdl-textfield__expandable-holder">
-									<input class="mdl-textfield__input" type="text" id="searchProduct">
-									<label class="mdl-textfield__label"></label>
+									<select id="searchType" class="mdl-textfield__input">
+										<option value="codigo">Código</option>
+										<option value="nombre">Nombre</option>
+										<option value="categoria">Categoría</option>
+									</select>
+									<input type="text" id="searchInput" class="mdl-textfield__input" placeholder="Buscar..." oninput="searchTree()">
+									<button type="button" onclick="searchTree()">Buscar</button>
+									<button type="button" onclick="showAllRecords()">Ver todos los registros</button>
 								</div>
 							</div>
 						</form>
+						<div id="searchResults"></div>
+						<div class="mdl-list" id="productsList">
+							<!-- Los proveedores existentes se mostrarán aquí -->
+							<!-- Se asume que el contenido aquí será generado dinámicamente por el backend -->
+						</div>
 						<nav class="full-width menu-categories">
 							<ul class="list-unstyle text-center">
 								<li><a href="#!">Alimentos</a></li>
@@ -267,6 +278,108 @@
 			var optionsContainer = element.parentNode.querySelector('.options-container');
 			optionsContainer.style.display = 'block';
 		}
+	</script>
+	<script>
+		async function fetchTreeData() {
+			console.log('fetchTreeData called');
+			
+			try {
+				const response = await fetch('/arbol.json');
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return await response.json();
+			} catch (error) {
+				console.error('Fetch error:', error);
+				return null;
+			}
+		}
+
+		function searchInNode(node, searchTerm) {
+			const results = [];
+			if (node.nombre === "Productos" || node.nombre.toLowerCase().includes("productos")) {
+				for (const child of node.hijos || []) {
+					if (child.datos) {
+						for (const data of child.datos) {
+							if (JSON.stringify(data).toLowerCase().includes(searchTerm.toLowerCase())) {
+								results.push(data);
+							}
+						}
+					}
+				}
+			} else {
+				for (const child of node.hijos || []) {
+					results.push(...searchInNode(child, searchTerm));
+				}
+			}
+			return results;
+		}
+
+		async function searchTree() {
+			console.log('searchTree called');
+			const searchType = document.getElementById('searchType').value;
+			const searchTerm = document.getElementById('searchInput').value.trim();
+			const treeData = await fetchTreeData();
+			if (treeData && searchTerm) {
+				const results = searchInNode(treeData, searchTerm);
+				displayResults(results, searchType);
+			} else {
+				productsList.innerHTML = '<p>No se encontraron resultados</p>';
+			}
+		}
+		
+		function showAllRecords() {
+			fetchTreeData().then(treeData => {
+				if (treeData) {
+					const results = searchInNode(treeData, "");
+					displayResults(results);
+				}
+			});
+		}
+
+		function displayResults(results) {
+			const productsList = document.getElementById('productsList');
+			
+			// Eliminar todas las tarjetas de productos existentes
+			while (productsList.firstChild) {
+				productsList.removeChild(productsList.firstChild);
+			}
+		
+			if (results.length > 0) {
+				results.forEach((item) => {
+					const cardDiv = document.createElement('div');
+					cardDiv.className = 'mdl-card mdl-shadow--2dp full-width product-card';
+					cardDiv.innerHTML = `
+						<div class="mdl-card__title">
+							<img src="${item.imagenprod}" alt="product" class="img-responsive">
+						</div>
+						<div class="mdl-card__supporting-text">
+							<small>Código: ${item.idproductos}</small><br>
+							<small>Existencias: ${item.unidadesprod} unidades</small><br>
+							<small>Categorías: ${item.categoria}</small><br>
+							<small>Precio: $${item.precioprod}</small><br>
+						</div>
+						<div class="mdl-card__actions mdl-card--border">
+							${item.nombreprod}
+							<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+								<i class="zmdi zmdi-more"></i>
+							</a>
+							<div class="options-container" style="display: none;">
+								<a href="/editar_producto/${item.idproductos}">Editar</a>
+								<a href="/eliminar_producto/${item.idproductos}">Eliminar</a>
+							</div>
+						</div>
+					`;
+					productsList.appendChild(cardDiv); // Agregar nuevo elemento a la lista
+				});
+			} else {
+				const noResultsDiv = document.createElement('div');
+				noResultsDiv.innerHTML = '<p>No se encontraron resultados</p>';
+				productsList.appendChild(noResultsDiv);
+			}
+		}
+		
+		
 	</script>
 	</body>
 </html>

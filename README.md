@@ -52,27 +52,27 @@ Crear tabla de usuarios y configurar las credenciales para poder ingresar al apl
 
 ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.001.png)**
 
-1. ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.002.png)**Al ingresar el usuario y contraseña guardados en base de datos accede al dashboard**
+2. **Al ingresar el usuario y contraseña guardados en base de datos accede al dashboard**
 
-1. **Al ingresar en la opción Proveedores nos carga el formulario para ingresar un proveedor nuevo**
+![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.002.png)
 
-   ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.003.png)
+3. **Al ingresar en la opción Proveedores nos carga el formulario para ingresar un proveedor nuevo**
 
-1. ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.004.png)**Al seleccionar la lista nos cargan los registros de la base de datos** 
+![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.003.png)
 
-1. **En los registros aparecen las opciones Editar y Eliminar**
+4. **Al seleccionar la lista nos cargan los registros de la base de datos** 
 
-   ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.005.png)
+![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.004.png)
 
+5. **En los registros aparecen las opciones Editar y Eliminar**
 
+![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.005.png)
 
-
-1. **En la opción productos podemos ver el catálogo de todos los registros**
-
+6. **En la opción productos podemos ver el catálogo de todos los registros**
 
 ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.006.png)
 
-1. **En la opción Inventario podemos apreciar los productos con el stock actualizado** 
+7. **En la opción Inventario podemos apreciar los productos con el stock actualizado** 
 
-   ![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.007.png)
+![](Aspose.Words.1b82731a-8c92-4c5e-bc98-688519052c16.007.png)
 

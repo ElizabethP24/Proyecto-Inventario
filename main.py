@@ -1,19 +1,3 @@
-import mysql.connector
-import os
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify,send_from_directory
-from werkzeug.utils import secure_filename
-from PIL import Image 
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.orm import sessionmaker
-from graphviz import Digraph
-from datetime import date, datetime
-import json
-
-# Crear la aplicación Flask y configurar la carpeta estática
-app = Flask(__name__, 
-            static_folder='D:\\ELIZA\SISTEMAS\\INGENIERIA\\SEMESTRE II\\ESTRUCT DATOS APLICADA\\ProyectoInventario\\static', 
-            static_url_path='/static')
-
 
 @app.route('/arbol.json')
 def get_arbol_json():
@@ -1338,7 +1322,3 @@ def actualizar_venta_en_bd(datos):
     # Actualizar el árbol
     construir_y_guardar_arbol()
     print("Árbol reconstruido y guardado después de actualizar administrador.")
-    
-if __name__ == '__main__':
-    # Ejecutar la aplicación Flask
-    app.run(debug=True)

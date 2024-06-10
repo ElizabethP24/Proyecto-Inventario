@@ -166,6 +166,8 @@ def guardar_proveedor():
         flash("Proveedor agregado exitosamente", "success")
         # Cerrar el cursor
         cursor.close()
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
         return redirect(url_for('providers'))
     except mysql.connector.Error as error:
         print("Error al insertar proveedor:", error)
@@ -192,6 +194,8 @@ def guardar_categoria():
         flash("Categoría agregado exitosamente", "success")
         # Cerrar el cursor
         cursor.close()
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
         return redirect(url_for('categories'))
     except mysql.connector.Error as error:
         print("Error al insertar categoria:", error)
@@ -210,7 +214,6 @@ def guardar_administrador():
     contrasena = request.form['passwordAdmin']
     avatar = request.form['avatarAdmin']
     
-        
     # Preparar la consulta de inserción
     consulta = "INSERT INTO administradores (docadmin, nombreadmin, telefonoadmin, correoadmin, usuarioadmin, contrasenaadmin, avataradmin) VALUES (%s, %s,%s, %s,%s, %s,%s)"
     valores = (documento, nombre, telefono, correo, usuario, contrasena, avatar)
@@ -220,17 +223,28 @@ def guardar_administrador():
         cursor = conexion.cursor()
         cursor.execute(consulta, valores)
         conexion.commit()
+        
+        # Verificar si los cambios se han guardado correctamente
+        cursor.execute("SELECT * FROM administradores WHERE docadmin = %s", (documento,))
+        administrador = cursor.fetchone()
+        if administrador:
+            print("Administrador agregado correctamente a la base de datos.")
+
         flash("Administrador agregado exitosamente", "success")
         # Cerrar el cursor
         cursor.close()
+        
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de agregar administrador.")
+        
         return redirect(url_for('admin'))
     except mysql.connector.Error as error:
         print("Error al insertar administrador:", error)
         conexion.rollback()
         flash("Error al insertar administrador: {}".format(error), "error")
-        return redirect(url_for('admin'))
+        return redirect(url_for('admin'))@app.route('/guardar_cliente', methods=['POST'])
     
-@app.route('/guardar_cliente', methods=['POST'])
 def guardar_cliente():
     # Obtener los datos del formulario
     dni = request.form['DNIClient']
@@ -251,6 +265,8 @@ def guardar_cliente():
         flash("Cliente agregado exitosamente", "success")
         # Cerrar el cursor
         cursor.close()
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
         return redirect(url_for('client'))
     except mysql.connector.Error as error:
         print("Error al insertar cliente:", error)
@@ -375,6 +391,8 @@ def guardar_venta():
                 conexion.commit()
 
                 flash("Venta agregada exitosamente", "success")
+                # Actualizar el árbol
+                construir_y_guardar_arbol()
             else:
                 flash("No hay suficiente stock disponible", "error")
         else:
@@ -414,6 +432,8 @@ def guardar_producto():
         if ejecutar_consulta(consulta, valores):
             if upload_product(imagen):
                 flash("Producto agregado exitosamente", "success")
+                # Actualizar el árbol
+                construir_y_guardar_arbol()
             else:
                 flash("Error al subir la imagen del producto", "error")
         else:
@@ -486,6 +506,8 @@ def listar_proveedores():
         # Obtener todos los registros de proveedores
         proveedores = cursor.fetchall()
         print("Proveedores obtenidos:", proveedores)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -525,6 +547,8 @@ def listar_categorias():
         # Obtener todos los registros las categorias
         categorias = cursor.fetchall()
         print("Categorias obtenidos:", categorias)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -564,6 +588,9 @@ def listar_administradores():
         # Obtener todos los registros las categorias
         administradores = cursor.fetchall()
         print("Administradores obtenidos:", administradores)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de actualizar administrador.")
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -603,6 +630,8 @@ def listar_clientes():
         # Obtener todos los registros de clientes
         proveedores = cursor.fetchall()
         print("Clientes obtenidos:", clientes)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -642,6 +671,8 @@ def listar_productos():
         # Obtener todos los registros de productos
         productos = cursor.fetchall()
         print("Productos obtenidos:", productos)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -681,6 +712,8 @@ def listar_ventas():
         # Obtener todos los registros de ventas
         ventas = cursor.fetchall()
         print("Ventas obtenidos:",ventas)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -720,6 +753,8 @@ def listar_inventario():
         # Obtener todos los registros de inventario
         inventario = cursor.fetchall()
         print("Inventario obtenido:", inventario)  # Verificar los datos en la consola
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
@@ -878,6 +913,11 @@ print(arbol_cargado)
 dot = visualizar_arbol(arbol_cargado)
 dot.render('arbol_visual', format='pdf')
 
+def construir_y_guardar_arbol():
+    arbol = construir_arbol()
+    guardar_arbol_en_archivo(arbol, 'arbol.json')
+    print("Árbol reconstruido y guardado")
+
 @app.route('/actualizar_administrador/<docadmin>', methods=['POST'])
 def actualizar_administrador(docadmin):
     try:
@@ -892,6 +932,8 @@ def actualizar_administrador(docadmin):
         )
         actualizar_administrador_en_bd(docadmin, datos)
         flash("Administrador actualizado exitosamente", "success")
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
         return redirect(url_for('admin'))
     except mysql.connector.Error as error:
         print("Error al actualizar administrador:", error)
@@ -930,6 +972,10 @@ def eliminar_administrador_de_bd(docadmin):
     cursor.execute(query, (docadmin,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de eliminar administrador.")
+
 
 def actualizar_administrador_en_bd(docadmin, datos):
     cursor = conexion.cursor()
@@ -937,6 +983,9 @@ def actualizar_administrador_en_bd(docadmin, datos):
     cursor.execute(query, datos + (docadmin,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
 
 @app.route('/actualizar_proveedor/<string:docproveedor>', methods=['POST'])
 def actualizar_proveedor(docproveedor):
@@ -951,6 +1000,9 @@ def actualizar_proveedor(docproveedor):
         )
         actualizar_proveedor_en_bd(docproveedor, datos)
         flash("Proveedor actualizado exitosamente", "success")
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de actualizar administrador.")
         return redirect(url_for('providers'))
     except mysql.connector.Error as error:
         print("Error al actualizar proveedor:", error)
@@ -990,6 +1042,9 @@ def eliminar_proveedor_de_bd(docproveedor):
     cursor.execute(query, (docproveedor,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
 
 def actualizar_proveedor_en_bd(docproveedor, datos):
     cursor = conexion.cursor()
@@ -997,6 +1052,9 @@ def actualizar_proveedor_en_bd(docproveedor, datos):
     cursor.execute(query, datos + (docproveedor,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
     
 @app.route('/actualizar_categoria/<int:idcategoria>', methods=['POST'])
 def actualizar_categoria(idcategoria):
@@ -1008,6 +1066,9 @@ def actualizar_categoria(idcategoria):
         )
         actualizar_categoria_en_bd(datos)
         flash("Categoría actualizada exitosamente", "success")
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de actualizar administrador.")
         return redirect(url_for('categories'))
     except mysql.connector.Error as error:
         print("Error al actualizar categoría:", error)
@@ -1046,6 +1107,9 @@ def eliminar_categoria_de_bd(idcategoria):
     cursor.execute(query, (idcategoria,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
 
 def actualizar_categoria_en_bd(datos):
     cursor = conexion.cursor()
@@ -1053,6 +1117,9 @@ def actualizar_categoria_en_bd(datos):
     cursor.execute(query, datos)
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
     
 @app.route('/actualizar_cliente/<int:idcliente>', methods=['POST'])
 def actualizar_cliente(idcliente):
@@ -1067,6 +1134,9 @@ def actualizar_cliente(idcliente):
         )
         actualizar_cliente_en_bd(datos)
         flash("Cliente actualizado exitosamente", "success")
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de actualizar administrador.")
         return redirect(url_for('client'))
     except mysql.connector.Error as error:
         print("Error al actualizar cliente:", error)
@@ -1105,6 +1175,9 @@ def eliminar_cliente_de_bd(doccliente):
     cursor.execute(query, (doccliente,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
 
 def actualizar_cliente_en_bd(datos):
     cursor = conexion.cursor()
@@ -1112,6 +1185,9 @@ def actualizar_cliente_en_bd(datos):
     cursor.execute(query, datos)
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
     
 @app.route('/actualizar_producto/<int:idproducto>', methods=['POST'])
 def actualizar_producto(idproducto):
@@ -1131,6 +1207,9 @@ def actualizar_producto(idproducto):
         )
         actualizar_producto_en_bd(datos)
         flash("Producto actualizado exitosamente", "success")
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de actualizar administrador.")
         return redirect(url_for('products'))
     except mysql.connector.Error as error:
         print("Error al actualizar producto:", error)
@@ -1169,6 +1248,9 @@ def eliminar_producto_de_bd(idproducto):
     cursor.execute(query, (idproducto,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
 
 def actualizar_producto_en_bd(datos):
     cursor = conexion.cursor()
@@ -1176,6 +1258,9 @@ def actualizar_producto_en_bd(datos):
     cursor.execute(query, datos)
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
     
 @app.route('/actualizar_venta/<int:idventa>', methods=['POST'])
 def actualizar_venta(idventa):
@@ -1194,6 +1279,9 @@ def actualizar_venta(idventa):
         )
         actualizar_venta_en_bd(datos)
         flash("Venta actualizada exitosamente", "success")
+        # Actualizar el árbol
+        construir_y_guardar_arbol()
+        print("Árbol reconstruido y guardado después de actualizar administrador.")
         return redirect(url_for('sales'))
     except mysql.connector.Error as error:
         print("Error al actualizar venta:", error)
@@ -1236,6 +1324,9 @@ def eliminar_venta_de_bd(idventa):
     cursor.execute(query, (idventa,))
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
 
 
 def actualizar_venta_en_bd(datos):
@@ -1244,6 +1335,9 @@ def actualizar_venta_en_bd(datos):
     cursor.execute(query, datos)
     conexion.commit()
     cursor.close()
+    # Actualizar el árbol
+    construir_y_guardar_arbol()
+    print("Árbol reconstruido y guardado después de actualizar administrador.")
     
 if __name__ == '__main__':
     # Ejecutar la aplicación Flask

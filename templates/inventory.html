@@ -178,6 +178,45 @@
 				}
 			});
 		}
+		function displayResults(results) {
+			const productsList = document.getElementById('productsList');
+			
+			// Eliminar todas las tarjetas de productos existentes
+			while (productsList.firstChild) {
+				productsList.removeChild(productsList.firstChild);
+			}
+		
+			if (results.length > 0) {
+				results.forEach((item) => {
+					const cardDiv = document.createElement('div');
+					cardDiv.className = 'mdl-card mdl-shadow--2dp full-width product-card';
+					cardDiv.innerHTML = `
+						<div class="mdl-card__supporting-text">
+							<small>Código: ${item.idproductos}</small><br>
+							<small>Existencias: ${item.unidadesprod} unidades</small><br>
+							<small>Categorías: ${item.categoria}</small><br>
+							<small>Precio: $${item.precioprod}</small><br>
+							<small>Precio: $${item.estadoprod}</small><br>
+						</div>
+						<div class="mdl-card__actions mdl-card--border">
+							${item.nombreprod}
+							<a class="mdl-list__item-secondary-action" href="#!" onclick="toggleOptions(this)">
+								<i class="zmdi zmdi-more"></i>
+							</a>
+							<div class="options-container" style="display: none;">
+								<a href="/editar_producto/${item.idproductos}">Editar</a>
+								<a href="/eliminar_producto/${item.idproductos}">Eliminar</a>
+							</div>
+						</div>
+					`;
+					productsList.appendChild(cardDiv); // Agregar nuevo elemento a la lista
+				});
+			} else {
+				const noResultsDiv = document.createElement('div');
+				noResultsDiv.innerHTML = '<p>No se encontraron resultados</p>';
+				productsList.appendChild(noResultsDiv);
+			}
+		}
 	</script>
 </body>
 </html>

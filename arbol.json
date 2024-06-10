@@ -263,6 +263,15 @@
                             "usuarioadmin": "esteban",
                             "contrasenaadmin": "123456789",
                             "avataradmin": "avatar2.png"
+                        },
+                        {
+                            "docadmin": 2147483647,
+                            "nombreadmin": "prueba",
+                            "telefonoadmin": "3197342114",
+                            "correoadmin": "prueba@gmail.com",
+                            "usuarioadmin": "prueba",
+                            "contrasenaadmin": "123456789",
+                            "avataradmin": "avatar5.png"
                         }
                     ],
                     "hijos": []

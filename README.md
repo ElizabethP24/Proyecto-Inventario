@@ -36,9 +36,9 @@ Instala las dependencias necesarias utilizando pip:
 
 *pip install* 
 
-- **INICIA EL SERVIDOR DE DESARROLLO DE FLASK**
+- **INICIA EL SERVIDOR**
 
-*flask run*
+*python main.py*
 
 - **ENLAZAR BASE DE DATOS**
 
